@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/GregoryLAIGNEAU/docker-express-postgres-boilerplate/issues"
   },
-  "homepage": "https://github.com/GregoryLAIGNEAU/docker-express-postgres-boilerplate#readme"
+  "homepage": "https://github.com/GregoryLAIGNEAU/docker-express-postgres-boilerplate#readme",
+  "dependencies": {
+    "express": "^4.21.2"
+  }
 }
