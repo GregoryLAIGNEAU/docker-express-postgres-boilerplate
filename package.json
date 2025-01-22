@@ -21,5 +21,8 @@
   "homepage": "https://github.com/GregoryLAIGNEAU/docker-express-postgres-boilerplate#readme",
   "dependencies": {
     "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4"
   }
 }
