@@ -5,6 +5,7 @@
   "main": "app.mjs",
   "scripts": {
     "start": "node app.mjs",
+    "dev": "node --watch --env-file=.env.development app.mjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
