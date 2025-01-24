@@ -1,5 +1,9 @@
 services:
   app:
+    build:
+      context: .
+      args:
+        NODE_ENV: production
     environment:
       NODE_ENV: production
     command: npm start
