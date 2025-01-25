@@ -23,6 +23,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.21.2",
+    "passport": "^0.7.0",
     "postgres": "^3.4.5"
   },
   "devDependencies": {
