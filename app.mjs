@@ -1,6 +1,10 @@
 import express from "express";
+import cors from "cors";
+import corsOptions from "./config/corsOptions.mjs";
 
 const app = express();
+
+app.use(cors(corsOptions));
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
