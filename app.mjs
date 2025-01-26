@@ -1,8 +1,10 @@
 import express from "express";
 import cors from "cors";
+
 import corsOptions from "./config/corsOptions.mjs";
-import authRouter from "./routers/authRouter.mjs";
 import notFoundMiddleware from "./middlewares/notFoundMiddleware.mjs";
+import errorHandlerMiddleware from "./middlewares/errorHandlerMiddleware.mjs";
+import authRouter from "./routers/authRouter.mjs";
 
 const app = express();
 
@@ -21,6 +23,7 @@ app.get("/", (req, res) => {
 });
 
 app.use(notFoundMiddleware);
+app.use(errorHandlerMiddleware);
 
 const PORT = Number(process.env.PORT) || 5000;
 
