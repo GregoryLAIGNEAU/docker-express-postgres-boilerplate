@@ -14,14 +14,6 @@ app.use(express.json());
 
 app.use("/", authRouter);
 
-app.get("/trigger-500", (req, res, next) => {
-  next(new NotFoundError());
-});
-
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
-
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
 
