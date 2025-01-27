@@ -1,9 +1,9 @@
-import { AppError } from "../errors/indexError.mjs";
+import { ApiError } from "../errors/indexError.mjs";
 
 const errorHandlerMiddleware = (err, req, res, next) => {
   console.log(err);
 
-  if (err instanceof AppError) {
+  if (err instanceof ApiError) {
     return res.status(err.statusCode).json({
       message: err.message,
     });
