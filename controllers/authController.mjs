@@ -1,7 +1,7 @@
 import * as argon2 from "argon2";
 import asyncHandler from "express-async-handler";
 import { sendActivationEmail } from "../mailer/authMailer.mjs";
-import { createUser } from "../models/userModel.mjs";
+import { createUser, activateUserAccount } from "../models/userModel.mjs";
 import { generateToken, hashToken } from "../utils/tokenUtil.mjs";
 
 const postRegister = asyncHandler(async (req, res) => {
@@ -28,4 +28,19 @@ const postRegister = asyncHandler(async (req, res) => {
   });
 });
 
-export { postRegister };
+const getRegisterActivate = asyncHandler(async (req, res) => {
+  const { token } = req.query;
+
+  const activationTokenHash = hashToken(token);
+
+  const user = await activateUserAccount(activationTokenHash);
+
+  if (!user) {
+    return res.status(400).json({ success: false });
+  }
+
+  return res.status(200).json({ success: true });
+});
+
+export { postRegister, getRegisterActivate };
+
