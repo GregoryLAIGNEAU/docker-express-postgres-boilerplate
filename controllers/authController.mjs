@@ -130,7 +130,7 @@ const postResetPassword = asyncHandler(async (req, res) => {
 
   const resetPasswordTokenHash = hashToken(token);
 
-  const user = await verifyResetPasswordToken(resetPasswordTokenHash);
+  const user = await verifyResetPasswordToken(email, resetPasswordTokenHash);
 
   if (!user) {
     throw new UnauthorizedError(

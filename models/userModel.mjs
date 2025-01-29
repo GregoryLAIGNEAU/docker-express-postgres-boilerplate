@@ -5,7 +5,7 @@ async function createUser(
   lastName,
   email,
   passwordHash,
-  activationTokenHash,
+  activationTokenHash
 ) {
   await sql`
     INSERT INTO users 
@@ -57,12 +57,13 @@ async function updateResetPasswordToken(id, resetPasswordTokenHash) {
   `;
 }
 
-async function verifyResetPasswordToken(resetPasswordTokenHash) {
+async function verifyResetPasswordToken(email, resetPasswordTokenHash) {
   const [user] = await sql`
     SELECT * 
     FROM users 
     WHERE 
-      reset_password_token_hash = ${resetPasswordTokenHash}
+      email = ${email}
+      AND reset_password_token_hash = ${resetPasswordTokenHash}
       AND reset_password_token_hash_expires_at > NOW()
   `;
 
