@@ -11,8 +11,9 @@ import {
   getUserByEmail,
   updateResetPasswordToken,
   verifyResetPasswordToken,
+  resetPassword,
 } from "../models/userModel.mjs";
-import { UnauthorizedError } from "../errors/indexError.mjs";
+import { UnauthorizedError, BadRequestError } from "../errors/indexError.mjs";
 import { generateToken, hashToken } from "../utils/tokenUtil.mjs";
 
 const postRegister = asyncHandler(async (req, res) => {
@@ -135,10 +136,40 @@ const getResetPassword = asyncHandler(async (req, res) => {
   });
 });
 
+const postResetPassword = asyncHandler(async (req, res) => {
+  const { token } = req.query;
+  const { email, password, confirmPassword } = req.body;
+
+  if (password !== confirmPassword) {
+    throw new BadRequestError(
+      "Oops! Your passwords don't match. Please double-check and try again.",
+    );
+  }
+
+  const resetPasswordTokenHash = hashToken(token);
+
+  const user = await verifyResetPasswordToken(resetPasswordTokenHash);
+
+  if (!user) {
+    throw new UnauthorizedError(
+      "Oops! It seems there was an issue with your password reset request. Please try again or request a new link.",
+    );
+  }
+
+  const passwordHash = await argon2.hash(password);
+
+  await resetPassword(email, resetPasswordTokenHash, passwordHash);
+
+  res.status(200).json({
+    message: "Password successfully reset",
+  });
+});
+
 export {
   postRegister,
   getRegisterActivate,
   postLogin,
   postForgotPassword,
   getResetPassword,
+  postResetPassword,
 };
