@@ -118,24 +118,6 @@ const postForgotPassword = asyncHandler(async (req, res) => {
   });
 });
 
-const getResetPassword = asyncHandler(async (req, res) => {
-  const { token } = req.query;
-
-  const resetPasswordTokenHash = hashToken(token);
-
-  const user = await verifyResetPasswordToken(resetPasswordTokenHash);
-
-  if (!user) {
-    throw new UnauthorizedError(
-      "Oops! There was an issue with your password reset request. Please try again or request a new link.",
-    );
-  }
-
-  res.status(200).json({
-    message: "Reset token is valid",
-  });
-});
-
 const postResetPassword = asyncHandler(async (req, res) => {
   const { token } = req.query;
   const { email, password, confirmPassword } = req.body;
@@ -170,6 +152,5 @@ export {
   getRegisterActivate,
   postLogin,
   postForgotPassword,
-  getResetPassword,
   postResetPassword,
 };

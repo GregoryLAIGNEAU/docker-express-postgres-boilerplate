@@ -4,7 +4,6 @@ import {
   getRegisterActivate,
   postLogin,
   postForgotPassword,
-  getResetPassword,
   postResetPassword,
 } from "../controllers/authController.mjs";
 
@@ -17,8 +16,6 @@ authRouter.get("/register/activate", getRegisterActivate);
 authRouter.post("/login", postLogin);
 
 authRouter.post("/forgot-password", postForgotPassword);
-
-authRouter.get("/reset-password/reset", getResetPassword);
 
 authRouter.post("/reset-password/reset", postResetPassword);
 
