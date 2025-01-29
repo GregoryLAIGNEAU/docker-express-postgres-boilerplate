@@ -47,4 +47,20 @@ async function getUserById(id) {
   return user;
 }
 
-export { createUser, activateUserAccount, getUserByEmail, getUserById };
+async function updateResetPasswordToken(id, resetPasswordTokenHash) {
+  await sql`
+    UPDATE users 
+    SET 
+      reset_password_token_hash = ${resetPasswordTokenHash}, 
+      reset_password_token_hash_expires_at = NOW() + interval '15 minutes' 
+    WHERE id = ${id}
+  `;
+}
+
+export {
+  createUser,
+  activateUserAccount,
+  getUserByEmail,
+  getUserById,
+  updateResetPasswordToken,
+};
