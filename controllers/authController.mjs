@@ -1,11 +1,15 @@
 import * as argon2 from "argon2";
 import asyncHandler from "express-async-handler";
 import jwt from "jsonwebtoken";
-import { sendActivationEmail } from "../mailer/authMailer.mjs";
+import {
+  sendActivationEmail,
+  sendResetPasswordEmail,
+} from "../mailer/authMailer.mjs";
 import {
   createUser,
   activateUserAccount,
   getUserByEmail,
+  updateResetPasswordToken,
 } from "../models/userModel.mjs";
 import { generateToken, hashToken } from "../utils/tokenUtil.mjs";
 
@@ -89,4 +93,26 @@ const postLogin = asyncHandler(async (req, res) => {
     .json({ message: "User logged in", accessToken: accessToken });
 });
 
-export { postRegister, getRegisterActivate, postLogin };
+const postForgotPassword = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+
+  const user = await getUserByEmail(email);
+
+  if (user) {
+    const userId = user.id;
+    const resetPasswordToken = generateToken();
+    const resetPasswordTokenHash = hashToken(resetPasswordToken);
+
+    await updateResetPasswordToken(userId, resetPasswordTokenHash);
+
+    await sendResetPasswordEmail(email, resetPasswordToken);
+  }
+
+  res.status(200).json({
+    message:
+      "If an account exists with that email, a password reset link has been sent",
+    email: email,
+  });
+});
+
+export { postRegister, getRegisterActivate, postLogin, postForgotPassword };
