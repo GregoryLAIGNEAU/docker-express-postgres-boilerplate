@@ -1,7 +1,12 @@
 import * as argon2 from "argon2";
 import asyncHandler from "express-async-handler";
+import jwt from "jsonwebtoken";
 import { sendActivationEmail } from "../mailer/authMailer.mjs";
-import { createUser, activateUserAccount } from "../models/userModel.mjs";
+import {
+  createUser,
+  activateUserAccount,
+  getUserByEmail,
+} from "../models/userModel.mjs";
 import { generateToken, hashToken } from "../utils/tokenUtil.mjs";
 
 const postRegister = asyncHandler(async (req, res) => {
@@ -42,5 +47,46 @@ const getRegisterActivate = asyncHandler(async (req, res) => {
   return res.status(200).json({ success: true });
 });
 
-export { postRegister, getRegisterActivate };
+const postLogin = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
 
+  const user = await getUserByEmail(email);
+
+  if (!user) {
+    return res.status(401).json({ message: "Invalid email or password" });
+  }
+
+  const passwordMatch = await argon2.verify(user.password_hash, password);
+
+  if (!passwordMatch) {
+    return res.status(401).json({ message: "Invalid email or password" });
+  }
+
+  if (user.account_status_id === 1) {
+    return res.status(400).json({
+      message:
+        "Your email verification is pending. Please verify your email to continue.",
+    });
+  }
+
+  if (user.account_status_id === 3) {
+    return res.status(400).json({
+      message:
+        "Your account has been suspended. Please contact support for assistance.",
+    });
+  }
+
+  const payload = {
+    sub: user.id,
+  };
+
+  const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {
+    expiresIn: "7d",
+  });
+
+  return res
+    .status(200)
+    .json({ message: "User logged in", accessToken: accessToken });
+});
+
+export { postRegister, getRegisterActivate, postLogin };
