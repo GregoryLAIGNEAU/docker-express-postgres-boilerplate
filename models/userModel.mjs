@@ -31,4 +31,20 @@ async function activateUserAccount(activationTokenHash) {
   return result.length > 0;
 }
 
-export { createUser, activateUserAccount };
+async function getUserByEmail(email) {
+  const [user] = await sql`
+    SELECT * FROM users WHERE email = ${email}
+  `;
+
+  return user;
+}
+
+async function getUserById(id) {
+  const [user] = await sql`
+    SELECT * FROM users WHERE id = ${id}
+  `;
+
+  return user;
+}
+
+export { createUser, activateUserAccount, getUserByEmail, getUserById };
