@@ -57,10 +57,23 @@ async function updateResetPasswordToken(id, resetPasswordTokenHash) {
   `;
 }
 
+async function verifyResetPasswordToken(resetPasswordTokenHash) {
+  const user = await sql`
+    SELECT * 
+    FROM users 
+    WHERE 
+      reset_password_token_hash = ${resetPasswordTokenHash}
+      AND reset_password_token_hash_expires_at > NOW()
+  `;
+
+  return user[0];
+}
+
 export {
   createUser,
   activateUserAccount,
   getUserByEmail,
   getUserById,
   updateResetPasswordToken,
+  verifyResetPasswordToken,
 };
