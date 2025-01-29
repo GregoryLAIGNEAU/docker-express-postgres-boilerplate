@@ -58,7 +58,7 @@ async function updateResetPasswordToken(id, resetPasswordTokenHash) {
 }
 
 async function verifyResetPasswordToken(resetPasswordTokenHash) {
-  const user = await sql`
+  const [user] = await sql`
     SELECT * 
     FROM users 
     WHERE 
@@ -66,7 +66,25 @@ async function verifyResetPasswordToken(resetPasswordTokenHash) {
       AND reset_password_token_hash_expires_at > NOW()
   `;
 
-  return user[0];
+  return user;
+}
+
+async function resetPassword(email, resetPasswordTokenHash, passwordHash) {
+  const result = await sql`
+    UPDATE users 
+    SET 
+      password_hash = ${passwordHash}, 
+      reset_password_token_hash = NULL, 
+      reset_password_token_hash_expires_at = NULL, 
+      password_updated_at = NOW(), 
+      updated_at = NOW() 
+    WHERE 
+      email = ${email}
+      AND reset_password_token_hash = ${resetPasswordTokenHash}
+      AND reset_password_token_hash_expires_at > NOW()
+  `;
+
+  return result.length > 0;
 }
 
 export {
@@ -76,4 +94,5 @@ export {
   getUserById,
   updateResetPasswordToken,
   verifyResetPasswordToken,
+  resetPassword,
 };
