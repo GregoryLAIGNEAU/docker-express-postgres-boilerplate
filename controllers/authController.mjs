@@ -10,7 +10,9 @@ import {
   activateUserAccount,
   getUserByEmail,
   updateResetPasswordToken,
+  verifyResetPasswordToken,
 } from "../models/userModel.mjs";
+import { UnauthorizedError } from "../errors/indexError.mjs";
 import { generateToken, hashToken } from "../utils/tokenUtil.mjs";
 
 const postRegister = asyncHandler(async (req, res) => {
@@ -115,4 +117,28 @@ const postForgotPassword = asyncHandler(async (req, res) => {
   });
 });
 
-export { postRegister, getRegisterActivate, postLogin, postForgotPassword };
+const getResetPassword = asyncHandler(async (req, res) => {
+  const { token } = req.query;
+
+  const resetPasswordTokenHash = hashToken(token);
+
+  const user = await verifyResetPasswordToken(resetPasswordTokenHash);
+
+  if (!user) {
+    throw new UnauthorizedError(
+      "Oops! There was an issue with your password reset request. Please try again or request a new link.",
+    );
+  }
+
+  res.status(200).json({
+    message: "Reset token is valid",
+  });
+});
+
+export {
+  postRegister,
+  getRegisterActivate,
+  postLogin,
+  postForgotPassword,
+  getResetPassword,
+};

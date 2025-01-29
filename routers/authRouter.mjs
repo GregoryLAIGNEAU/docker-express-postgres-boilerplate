@@ -3,7 +3,8 @@ import {
   postRegister,
   getRegisterActivate,
   postLogin,
-  postForgotPassword
+  postForgotPassword,
+  getResetPassword,
 } from "../controllers/authController.mjs";
 
 const authRouter = Router();
@@ -14,6 +15,8 @@ authRouter.get("/register/activate", getRegisterActivate);
 
 authRouter.post("/login", postLogin);
 
-authRouter.post('/forgot-password', postForgotPassword);
+authRouter.post("/forgot-password", postForgotPassword);
+
+authRouter.get("/reset-password/reset", getResetPassword);
 
 export default authRouter;
