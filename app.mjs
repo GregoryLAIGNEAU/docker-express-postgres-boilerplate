@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 
 import corsOptions from "./config/corsOptions.mjs";
+import logger from "./utils/loggerUtil.mjs";
 import notFoundMiddleware from "./middlewares/notFoundMiddleware.mjs";
 import errorHandlerMiddleware from "./middlewares/errorHandlerMiddleware.mjs";
 import authRouter from "./routers/authRouter.mjs";
@@ -24,5 +25,5 @@ app.use(errorHandlerMiddleware);
 const PORT = Number(process.env.PORT) || 5000;
 
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  logger.info(`Server is running on http://localhost:${PORT}`);
 });
