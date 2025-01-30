@@ -29,7 +29,8 @@
     "nodemailer": "^6.10.0",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
-    "postgres": "^3.4.5"
+    "postgres": "^3.4.5",
+    "winston": "^3.17.0"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4"
