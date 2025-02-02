@@ -1,9 +1,6 @@
 import { doubleCsrf } from "csrf-csrf";
+import doubleCsrfOptions from "../config/doubleCsrfOptions.mjs";
 
-const csrfProtection = doubleCsrf({
-  getSecret: () => process.env.CSRF_SECRET,
-  cookieMode: false,
-  size: 64,
-});
+const { generateToken, doubleCsrfProtection } = doubleCsrf(doubleCsrfOptions);
 
-export default csrfProtection;
+export { generateToken, doubleCsrfProtection };
