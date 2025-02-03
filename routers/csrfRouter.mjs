@@ -9,5 +9,4 @@ csrfRouter.get("/", (req, res) => {
   res.json({ token });
 });
 
-
 export default csrfRouter;
