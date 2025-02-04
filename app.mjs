@@ -5,8 +5,9 @@ import helmet from "helmet";
 
 import corsOptions from "./config/corsOptions.mjs";
 import { doubleCsrfProtection } from "./middlewares/csrfMiddleware.mjs";
-import notFoundMiddleware from "./middlewares/notFoundMiddleware.mjs";
 import errorHandlerMiddleware from "./middlewares/errorHandlerMiddleware.mjs";
+import morganMiddleware from "./middlewares/morganMiddleware.mjs";
+import notFoundMiddleware from "./middlewares/notFoundMiddleware.mjs";
 import passport from "passport";
 import authRouter from "./routers/authRouter.mjs";
 import csrfRouter from "./routers/csrfRouter.mjs";
@@ -15,22 +16,22 @@ import logger from "./utils/loggerUtil.mjs";
 
 const app = express();
 
-app.use(cors(corsOptions));
-app.disable("x-powered-by");
 app.use(
   helmet({
     xPoweredBy: false,
   }),
 );
-app.use(express.json({ limit: "10kb" }));
+app.disable("x-powered-by");
 
+app.use(cors(corsOptions));
+app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 app.use(cookieParser());
+app.use(morganMiddleware);
 
 passport.use(jwtStrategy);
 
 app.use("/csrf-token", csrfRouter);
-
 app.use(doubleCsrfProtection);
 
 app.use("/", authRouter);
