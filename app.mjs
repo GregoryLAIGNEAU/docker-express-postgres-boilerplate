@@ -16,7 +16,12 @@ import logger from "./utils/loggerUtil.mjs";
 const app = express();
 
 app.use(cors(corsOptions));
-app.use(helmet());
+app.disable("x-powered-by");
+app.use(
+  helmet({
+    xPoweredBy: false,
+  }),
+);
 app.use(express.json({ limit: "10kb" }));
 
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
