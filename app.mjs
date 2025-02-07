@@ -2,7 +2,6 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
 import helmet from "helmet";
-import { RateLimiterMemory } from "rate-limiter-flexible";
 
 import corsOptions from "./config/corsOptions.mjs";
 import { doubleCsrfProtection } from "./middlewares/csrfMiddleware.mjs";
