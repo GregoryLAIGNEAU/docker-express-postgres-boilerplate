@@ -2,12 +2,14 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
 import helmet from "helmet";
+import { RateLimiterMemory } from "rate-limiter-flexible";
 
 import corsOptions from "./config/corsOptions.mjs";
 import { doubleCsrfProtection } from "./middlewares/csrfMiddleware.mjs";
 import errorHandlerMiddleware from "./middlewares/errorHandlerMiddleware.mjs";
 import morganMiddleware from "./middlewares/morganMiddleware.mjs";
 import notFoundMiddleware from "./middlewares/notFoundMiddleware.mjs";
+import rateLimiterMiddleware from "./middlewares/rateLimiterMiddleware.mjs";
 import passport from "passport";
 import authRouter from "./routers/authRouter.mjs";
 import csrfRouter from "./routers/csrfRouter.mjs";
@@ -33,6 +35,7 @@ passport.use(jwtStrategy);
 
 app.use("/csrf-token", csrfRouter);
 app.use(doubleCsrfProtection);
+app.use(rateLimiterMiddleware);
 
 app.use("/", authRouter);
 
