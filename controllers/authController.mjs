@@ -1,5 +1,4 @@
 import * as argon2 from "argon2";
-import asyncHandler from "express-async-handler";
 import jwt from "jsonwebtoken";
 import {
   sendActivationEmail,
@@ -16,7 +15,7 @@ import {
 import { UnauthorizedError, BadRequestError } from "../errors/indexError.mjs";
 import { generateToken, hashToken } from "../utils/tokenUtil.mjs";
 
-const postRegister = asyncHandler(async (req, res) => {
+const postRegister = async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
 
   const passwordHash = await argon2.hash(password);
@@ -38,9 +37,9 @@ const postRegister = asyncHandler(async (req, res) => {
     message: "User registered successfully",
     email: email,
   });
-});
+};
 
-const getRegisterActivate = asyncHandler(async (req, res) => {
+const getRegisterActivate = async (req, res) => {
   const { token } = req.query;
 
   const activationTokenHash = hashToken(token);
@@ -52,9 +51,9 @@ const getRegisterActivate = asyncHandler(async (req, res) => {
   }
 
   return res.status(200).json({ success: true });
-});
+};
 
-const postLogin = asyncHandler(async (req, res) => {
+const postLogin = async (req, res) => {
   const { email, password } = req.body;
 
 
@@ -99,9 +98,9 @@ const postLogin = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json({ message: "User logged in", accessToken: accessToken });
-});
+};
 
-const postForgotPassword = asyncHandler(async (req, res) => {
+const postForgotPassword = async (req, res) => {
   const { email } = req.body;
 
   const user = await getUserByEmail(email);
@@ -121,9 +120,9 @@ const postForgotPassword = asyncHandler(async (req, res) => {
       "If an account exists with that email, a password reset link has been sent",
     email: email,
   });
-});
+};
 
-const postResetPassword = asyncHandler(async (req, res) => {
+const postResetPassword = async (req, res) => {
   const { token } = req.query;
   const { email, password, confirmPassword } = req.body;
 
@@ -150,7 +149,7 @@ const postResetPassword = asyncHandler(async (req, res) => {
   res.status(200).json({
     message: "Password successfully reset",
   });
-});
+};
 
 export {
   postRegister,
