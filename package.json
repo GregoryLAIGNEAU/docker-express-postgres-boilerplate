@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/GregoryLAIGNEAU/docker-express-postgres-boilerplate#readme",
   "dependencies": {
-    "argon2": "^0.41.1",
+    "argon2": "^0.43.1",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "csrf-csrf": "^3.1.0",
