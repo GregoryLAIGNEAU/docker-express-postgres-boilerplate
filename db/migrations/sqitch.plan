@@ -2,3 +2,4 @@
 %project=docker-express-postgres-boilerplate
 %uri=https://github.com/GregoryLAIGNEAU/docker-express-postgres-boilerplate
 
+authschema 2025-08-23T12:31:03Z Gregory LAIGNEAU <gregory.laigneau@mail.com> # Create auth schema
