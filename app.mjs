@@ -14,8 +14,11 @@ import authRouter from "./routers/authRouter.mjs";
 import csrfRouter from "./routers/csrfRouter.mjs";
 import jwtStrategy from "./strategies/jwtStrategy.mjs";
 import logger from "./utils/loggerUtil.mjs";
+import { isProduction } from "./utils/envUtil.mjs";
 
 const app = express();
+
+isProduction ? app.set("trust proxy", 1) : app.set("trust proxy", false);
 
 app.use(
   helmet({
