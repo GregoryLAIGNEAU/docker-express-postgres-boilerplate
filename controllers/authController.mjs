@@ -61,7 +61,6 @@ const postLogin = async (req, res) => {
 
 
   const user = await getUserByEmail(email);
-  console.log(user);
   const ACCOUNT_STATUS = Object.freeze({
     pending_verification: 1,
     suspended: 3,
