@@ -15,6 +15,8 @@ import {
 import { UnauthorizedError, BadRequestError } from "../errors/indexError.mjs";
 import { generateToken, hashToken } from "../utils/tokenUtil.mjs";
 import { generateAccessToken, setAccessCookie } from "../utils/jwtUtils.mjs";
+import { isProduction } from "../utils/envUtil.mjs";
+import { accessCookieOptions } from "../config/jwtCookieOptions.mjs";
 
 const postRegister = async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
@@ -148,10 +150,21 @@ const postResetPassword = async (req, res) => {
   });
 };
 
+const postLogout = async (req, res) => {
+  const cookieName = isProduction ? "__Host-access_token" : "access_token";
+
+  res.clearCookie(cookieName, accessCookieOptions);
+  res.status(200).json({
+    success: true,
+    message: 'Logged out successfully'
+  });
+};
+
 export {
   postRegister,
   getRegisterActivate,
   postLogin,
   postForgotPassword,
   postResetPassword,
+  postLogout,
 };
