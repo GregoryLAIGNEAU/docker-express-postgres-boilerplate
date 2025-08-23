@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import crypto from "crypto";
+import crypto from "node:crypto";
 import { isProduction } from "./envUtil.mjs";
 import { accessCookieOptions } from "../config/jwtCookieOptions.mjs";
 
