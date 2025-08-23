@@ -1,4 +1,4 @@
-import sql from "../db/sql.mjs";
+import sql from "../database/sql.mjs";
 
 async function createUser(
   firstName,
