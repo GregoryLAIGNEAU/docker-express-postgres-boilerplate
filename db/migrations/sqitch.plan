@@ -3,3 +3,4 @@
 %uri=https://github.com/GregoryLAIGNEAU/docker-express-postgres-boilerplate
 
 authschema 2025-08-23T12:31:03Z Gregory LAIGNEAU <gregory.laigneau@mail.com> # Create auth schema
+account_statuses [authschema] 2025-08-23T12:40:14Z Gregory LAIGNEAU <gregory.laigneau@mail.com> # Create account_statuses table
