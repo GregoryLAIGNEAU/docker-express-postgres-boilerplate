@@ -13,6 +13,13 @@ const doubleCsrfOptions = {
   cookieOptions: {
     secure: isProduction,
   },
+  getTokenFromRequest: (req) => {
+    if (req.is('application/x-www-form-urlencoded')) {
+      return req.body._csrf;
+    }
+
+    return req.headers['x-csrf-token'];
+  }
 };
 
 export default doubleCsrfOptions;
