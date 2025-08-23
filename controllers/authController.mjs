@@ -61,7 +61,8 @@ const postLogin = async (req, res) => {
 
 
   const user = await getUserByEmail(email);
-  const USER_STATUS = Object.freeze({
+  console.log(user);
+  const ACCOUNT_STATUS = Object.freeze({
     pending_verification: 1,
     suspended: 3,
   });
@@ -76,14 +77,14 @@ const postLogin = async (req, res) => {
     return res.status(401).json({ message: "Invalid email or password" });
   }
 
-  if (user.user_status_id === USER_STATUS.pending_verification) {
+  if (user.account_status_id === ACCOUNT_STATUS.pending_verification) {
     return res.status(400).json({
       message:
         "Your email verification is pending. Please verify your email to continue.",
     });
   }
 
-  if (user.user_status_id === USER_STATUS.suspended) {
+  if (user.account_status_id === ACCOUNT_STATUS.suspended) {
     return res.status(400).json({
       message:
         "Your account has been suspended. Please contact support for assistance.",
