@@ -14,7 +14,7 @@ import {
 } from "../models/userModel.mjs";
 import { UnauthorizedError, BadRequestError } from "../errors/indexError.mjs";
 import { generateToken, hashToken } from "../utils/tokenUtil.mjs";
-import { generateAccessToken } from "../utils/jwtUtils.mjs";
+import { generateAccessToken, setAccessCookie } from "../utils/jwtUtils.mjs";
 
 const postRegister = async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
@@ -89,6 +89,8 @@ const postLogin = async (req, res) => {
   }
 
   const accessToken = generateAccessToken(user.id);
+
+  setAccessCookie(res, accessToken);
 
   return res
     .status(200)
