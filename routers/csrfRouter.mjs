@@ -1,7 +1,7 @@
-import express from "express";
+import { Router } from "express";
 import { generateCsrfToken } from "../middlewares/csrfMiddleware.mjs";
 
-const csrfRouter = express.Router();
+const csrfRouter = Router();
 
 csrfRouter.get("/", (req, res) => {
   const csrfToken = generateCsrfToken(req, res);
