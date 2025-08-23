@@ -36,8 +36,8 @@ app.use(rateLimiterMiddleware);
 
 passport.use(jwtStrategy);
 
-app.use("/", authRouter);
-app.use("/csrf-token", csrfRouter);
+app.use("/api/v1", authRouter);
+app.use("/api/v1/csrf-token", csrfRouter);
 
 app.use(doubleCsrfProtection);
 
