@@ -6,8 +6,8 @@ import {
   postForgotPassword,
   postResetPassword,
   postLogout,
-} from "../controllers/authController.mjs";
-import jwtAuthMiddleware from "../middlewares/jwtAuthMiddleware.mjs";
+} from "../../../controllers/authController.mjs";
+import jwtAuthMiddleware from "../../../middlewares/jwtAuthMiddleware.mjs";
 
 const authRouter = Router();
 
