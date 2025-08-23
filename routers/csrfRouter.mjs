@@ -1,12 +1,12 @@
 import express from "express";
-import { generateToken } from "../middlewares/csrfMiddleware.mjs";
+import { generateCsrfToken } from "../middlewares/csrfMiddleware.mjs";
 
 const csrfRouter = express.Router();
 
 csrfRouter.get("/", (req, res) => {
-  const token = generateToken(req, res);
+  const csrfToken = generateCsrfToken(req, res);
 
-  res.json({ token });
+  res.json({ csrfToken });
 });
 
 export default csrfRouter;
