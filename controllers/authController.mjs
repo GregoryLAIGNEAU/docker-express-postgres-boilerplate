@@ -97,7 +97,7 @@ const postLogin = async (req, res) => {
 
   return res
     .status(200)
-    .json({ message: "User logged in", accessToken: accessToken });
+    .json({ message: "User logged in" });
 };
 
 const postForgotPassword = async (req, res) => {
