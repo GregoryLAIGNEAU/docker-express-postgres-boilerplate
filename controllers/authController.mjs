@@ -14,6 +14,7 @@ import {
 } from "../models/userModel.mjs";
 import { UnauthorizedError, BadRequestError } from "../errors/indexError.mjs";
 import { generateToken, hashToken } from "../utils/tokenUtil.mjs";
+import { generateAccessToken } from "../utils/jwtUtils.mjs";
 
 const postRegister = async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
@@ -87,13 +88,7 @@ const postLogin = async (req, res) => {
     });
   }
 
-  const payload = {
-    sub: user.id,
-  };
-
-  const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {
-    expiresIn: "7d",
-  });
+  const accessToken = generateAccessToken(user.id);
 
   return res
     .status(200)
