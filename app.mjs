@@ -32,14 +32,14 @@ app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 app.use(cookieParser());
 app.use(morganMiddleware);
+app.use(rateLimiterMiddleware);
 
 passport.use(jwtStrategy);
 
-app.use("/csrf-token", csrfRouter);
-app.use(doubleCsrfProtection);
-app.use(rateLimiterMiddleware);
-
 app.use("/", authRouter);
+app.use("/csrf-token", csrfRouter);
+
+app.use(doubleCsrfProtection);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
