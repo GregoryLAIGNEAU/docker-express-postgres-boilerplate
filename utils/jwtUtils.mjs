@@ -1,10 +1,10 @@
 import jwt from "jsonwebtoken";
-import crypto from "node:crypto";
+import { randomUUID } from "node:crypto";
 import { isProduction } from "./envUtil.mjs";
 import { accessCookieOptions } from "../config/jwtCookieOptions.mjs";
 
 export function generateAccessToken(userId) {
-  const payload = { sub: userId, sid: crypto.randomUUID() };
+  const payload = { sub: userId, sid: randomUUID() };
   return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "15m" });
 }
 
