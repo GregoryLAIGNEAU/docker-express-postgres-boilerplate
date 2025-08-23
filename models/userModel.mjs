@@ -8,7 +8,7 @@ async function createUser(
   activationTokenHash
 ) {
   await sql`
-    INSERT INTO users 
+    INSERT INTO auth.users 
       (firstname, lastname, email, password_hash, activation_token_hash, activation_token_hash_expires_at)
     VALUES 
       (${firstName}, ${lastName}, ${email}, ${passwordHash}, ${activationTokenHash}, NOW() + interval '15 minutes')
@@ -17,7 +17,7 @@ async function createUser(
 
 async function activateUserAccount(activationTokenHash) {
   const result = await sql`
-    UPDATE users
+    UPDATE auth.users
     SET 
       user_status_id = 2, 
       activation_token_hash = NULL, 
@@ -33,7 +33,7 @@ async function activateUserAccount(activationTokenHash) {
 
 async function getUserByEmail(email) {
   const [user] = await sql`
-    SELECT * FROM users WHERE email = ${email}
+    SELECT * FROM auth.users WHERE email = ${email}
   `;
 
   return user;
@@ -41,7 +41,7 @@ async function getUserByEmail(email) {
 
 async function getUserById(id) {
   const [user] = await sql`
-    SELECT * FROM users WHERE id = ${id}
+    SELECT * FROM auth.users WHERE id = ${id}
   `;
 
   return user;
@@ -49,7 +49,7 @@ async function getUserById(id) {
 
 async function updateResetPasswordToken(id, resetPasswordTokenHash) {
   await sql`
-    UPDATE users 
+    UPDATE auth.users 
     SET 
       reset_password_token_hash = ${resetPasswordTokenHash}, 
       reset_password_token_hash_expires_at = NOW() + interval '15 minutes' 
@@ -60,7 +60,7 @@ async function updateResetPasswordToken(id, resetPasswordTokenHash) {
 async function verifyResetPasswordToken(email, resetPasswordTokenHash) {
   const [user] = await sql`
     SELECT * 
-    FROM users 
+    FROM auth.users 
     WHERE 
       email = ${email}
       AND reset_password_token_hash = ${resetPasswordTokenHash}
@@ -72,7 +72,7 @@ async function verifyResetPasswordToken(email, resetPasswordTokenHash) {
 
 async function resetPassword(email, resetPasswordTokenHash, passwordHash) {
   const result = await sql`
-    UPDATE users 
+    UPDATE auth.users 
     SET 
       password_hash = ${passwordHash}, 
       reset_password_token_hash = NULL, 
