@@ -19,7 +19,7 @@ async function activateUserAccount(activationTokenHash) {
   const result = await sql`
     UPDATE auth.users
     SET 
-      user_status_id = 2, 
+      account_status_id = 2, 
       activation_token_hash = NULL, 
       activation_token_hash_expires_at = NULL
     WHERE 
