@@ -6,7 +6,7 @@ import {
 } from "../mailer/authMailer.mjs";
 import {
   createUser,
-  activateUserAccount,
+  activateAccount,
   getUserByEmail,
   updateResetPasswordToken,
   verifyResetPasswordToken,
@@ -42,12 +42,12 @@ const postRegister = async (req, res) => {
   });
 };
 
-const getRegisterActivate = async (req, res) => {
+const getActivateAccount = async (req, res) => {
   const { token } = req.query;
 
   const activationTokenHash = hashToken(token);
 
-  const user = await activateUserAccount(activationTokenHash);
+  const user = await activateAccount(activationTokenHash);
 
   if (!user) {
     return res.status(400).json({ success: false });
@@ -162,7 +162,7 @@ const postLogout = async (req, res) => {
 
 export {
   postRegister,
-  getRegisterActivate,
+  getActivateAccount,
   postLogin,
   postForgotPassword,
   postResetPassword,

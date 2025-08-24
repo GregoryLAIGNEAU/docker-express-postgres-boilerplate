@@ -15,7 +15,7 @@ async function createUser(
   `;
 }
 
-async function activateUserAccount(activationTokenHash) {
+async function activateAccount(activationTokenHash) {
   const result = await sql`
     UPDATE auth.users
     SET 
@@ -90,7 +90,7 @@ async function resetPassword(email, resetPasswordTokenHash, passwordHash) {
 
 export {
   createUser,
-  activateUserAccount,
+  activateAccount,
   getUserByEmail,
   getUserById,
   updateResetPasswordToken,
