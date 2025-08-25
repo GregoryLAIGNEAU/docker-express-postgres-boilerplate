@@ -18,6 +18,7 @@ import { generateAccessToken, setAccessCookie } from "../utils/jwtUtils.mjs";
 import { isProduction } from "../utils/envUtil.mjs";
 import { accessCookieOptions } from "../config/jwtCookieOptions.mjs";
 import {
+  forgotPasswordValidator,
   loginValidator,
   registerValidator,
 } from "../validators/authValidator.mjs";
@@ -108,7 +109,7 @@ const postLogin = async (req, res) => {
 };
 
 const postForgotPassword = async (req, res) => {
-  const { email } = req.body;
+  const { email } = await forgotPasswordValidator.validate(req.body);
 
   const user = await getUserByEmail(email);
 
