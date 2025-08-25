@@ -17,9 +17,11 @@ import { generateToken, hashToken } from "../utils/tokenUtil.mjs";
 import { generateAccessToken, setAccessCookie } from "../utils/jwtUtils.mjs";
 import { isProduction } from "../utils/envUtil.mjs";
 import { accessCookieOptions } from "../config/jwtCookieOptions.mjs";
+import { registerValidator } from "../validators/authValidator.mjs";
 
 const postRegister = async (req, res) => {
-  const { firstName, lastName, email, password } = req.body;
+  const { firstName, lastName, email, password } =
+    await registerValidator.validate(req.body);
 
   const passwordHash = await argon2.hash(password);
 
@@ -59,7 +61,6 @@ const getActivateAccount = async (req, res) => {
 const postLogin = async (req, res) => {
   const { email, password } = req.body;
 
-
   const user = await getUserByEmail(email);
   const ACCOUNT_STATUS = Object.freeze({
     pending_verification: 1,
@@ -94,9 +95,7 @@ const postLogin = async (req, res) => {
 
   setAccessCookie(res, accessToken);
 
-  return res
-    .status(200)
-    .json({ message: "User logged in" });
+  return res.status(200).json({ message: "User logged in" });
 };
 
 const postForgotPassword = async (req, res) => {
@@ -156,7 +155,7 @@ const postLogout = async (req, res) => {
   res.clearCookie(cookieName, accessCookieOptions);
   res.status(200).json({
     success: true,
-    message: 'Logged out successfully'
+    message: "Logged out successfully",
   });
 };
 
