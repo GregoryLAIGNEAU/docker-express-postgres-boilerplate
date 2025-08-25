@@ -50,6 +50,10 @@ const postRegister = async (req, res) => {
 const getActivateAccount = async (req, res) => {
   const { token } = req.query;
 
+  if (!token || typeof token !== "string") {
+    return res.status(400).json({ success: false });
+  }
+
   const activationTokenHash = hashToken(token);
 
   const user = await activateAccount(activationTokenHash);
@@ -64,7 +68,7 @@ const getActivateAccount = async (req, res) => {
 const postLogin = async (req, res) => {
   const { email, password } = await loginValidator.validate(req.body);
 
-  console.log(email)
+  console.log(email);
 
   const user = await getUserByEmail(email);
   const ACCOUNT_STATUS = Object.freeze({
