@@ -17,7 +17,10 @@ import { generateToken, hashToken } from "../utils/tokenUtil.mjs";
 import { generateAccessToken, setAccessCookie } from "../utils/jwtUtils.mjs";
 import { isProduction } from "../utils/envUtil.mjs";
 import { accessCookieOptions } from "../config/jwtCookieOptions.mjs";
-import { registerValidator } from "../validators/authValidator.mjs";
+import {
+  loginValidator,
+  registerValidator,
+} from "../validators/authValidator.mjs";
 
 const postRegister = async (req, res) => {
   const { firstName, lastName, email, password } =
@@ -59,7 +62,9 @@ const getActivateAccount = async (req, res) => {
 };
 
 const postLogin = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password } = await loginValidator.validate(req.body);
+
+  console.log(email)
 
   const user = await getUserByEmail(email);
   const ACCOUNT_STATUS = Object.freeze({
