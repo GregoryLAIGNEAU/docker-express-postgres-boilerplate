@@ -52,3 +52,18 @@ export const forgotPasswordValidator = vine.compile(
     }),
   }),
 );
+
+export const resetPasswordValidator = vine.compile(
+  vine.object({
+    email: vine.string().trim().email().normalizeEmail({
+      all_lowercase: true,
+      gmail_remove_dots: false,
+      gmail_remove_subaddress: false,
+      gmail_convert_googlemaildotcom: true,
+    }),
+    password: vine.string().minLength(12).maxLength(64).confirmed({
+      confirmationField: "confirmPassword",
+    }),
+    confirmPassword: vine.string().minLength(12).maxLength(64),
+  }),
+);

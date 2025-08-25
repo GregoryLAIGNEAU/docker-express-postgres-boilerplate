@@ -21,6 +21,7 @@ import {
   forgotPasswordValidator,
   loginValidator,
   registerValidator,
+  resetPasswordValidator,
 } from "../validators/authValidator.mjs";
 
 const postRegister = async (req, res) => {
@@ -132,7 +133,14 @@ const postForgotPassword = async (req, res) => {
 
 const postResetPassword = async (req, res) => {
   const { token } = req.query;
-  const { email, password, confirmPassword } = req.body;
+  const { email, password, confirmPassword } =
+    await resetPasswordValidator.validate(req.body);
+
+  if (!token || typeof token !== "string" || token.length !== 64) {
+    throw new UnauthorizedError(
+      "Oops! It seems there was an issue with your password reset request. Please try again or request a new link.",
+    );
+  }
 
   if (password !== confirmPassword) {
     throw new BadRequestError(
