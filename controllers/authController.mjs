@@ -50,7 +50,7 @@ const postRegister = async (req, res) => {
 const getActivateAccount = async (req, res) => {
   const { token } = req.query;
 
-  if (!token || typeof token !== "string") {
+  if (!token || typeof token !== "string" || token.length !== 64) {
     return res.status(400).json({ success: false });
   }
 
