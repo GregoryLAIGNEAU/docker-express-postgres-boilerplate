@@ -1,8 +1,6 @@
 import vine from "@vinejs/vine";
 import { uniqueRule } from "./rules/unique.mjs";
-import { emailSchema } from "./shared/emailSchema.mjs";
-import { nameSchema } from "./shared/nameSchema.mjs";
-import { passwordSchema } from "./shared/passwordSchema.mjs";
+import { emailSchema, nameSchema, passwordSchema } from "./shared/index.mjs";
 
 export const registerValidator = vine.compile(
   vine.object({

@@ -1,3 +1,5 @@
+import vine from "@vinejs/vine";
+
 export const nameSchema = vine
   .string()
   .trim()

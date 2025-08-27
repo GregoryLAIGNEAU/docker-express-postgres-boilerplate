@@ -1,3 +1,5 @@
+import vine from "@vinejs/vine";
+
 export const emailSchema = vine.string().trim().email().normalizeEmail({
   all_lowercase: true,
   gmail_remove_dots: false,
