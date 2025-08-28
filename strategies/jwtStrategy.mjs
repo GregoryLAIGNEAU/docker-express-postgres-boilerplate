@@ -14,7 +14,7 @@ const opts = {
     cookieExtractor,
     ExtractJwt.fromAuthHeaderAsBearerToken()
   ]),
-  secretOrKey: process.env.JWT_SECRET,
+  secretOrKey: process.env.ACCESS_TOKEN_SECRET,
 };
 
 const jwtStrategy = new JwtStrategy(opts, async (jwt_payload, done) => {
