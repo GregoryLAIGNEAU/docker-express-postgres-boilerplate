@@ -1,11 +1,18 @@
-import { createHash, randomBytes } from 'node:crypto';
+import { createHash, randomBytes, randomUUID } from "node:crypto";
+import jwt from "jsonwebtoken";
 
 const generateToken = () => {
-  return randomBytes(32).toString('hex');
+  return randomBytes(32).toString("hex");
 };
 
 const hashToken = (token) => {
-  return createHash('sha256').update(token).digest('hex');
+  return createHash("sha256").update(token).digest("hex");
 };
 
-export { generateToken, hashToken };
+function generateJwtToken(userId, secret, expiresIn) {
+  const payload = { sub: userId, sid: randomUUID() };
+
+  return jwt.sign(payload, secret, { expiresIn });
+}
+
+export { generateJwtToken, generateToken, hashToken };
