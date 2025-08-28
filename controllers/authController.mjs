@@ -14,7 +14,6 @@ import {
 } from "../models/userModel.mjs";
 import { UnauthorizedError, BadRequestError } from "../errors/indexError.mjs";
 import { generateToken, hashToken } from "../utils/tokenUtil.mjs";
-import { generateAccessToken, setAccessCookie } from "../utils/jwtUtils.mjs";
 import { isProduction } from "../utils/envUtil.mjs";
 import { accessCookieOptions } from "../config/jwtCookieOptions.mjs";
 import {
@@ -23,6 +22,9 @@ import {
   registerValidator,
   resetPasswordValidator,
 } from "../validators/authValidator.mjs";
+import { getRefreshTokenByHash } from "../models/refreshTokenModel.mjs";
+import { issueAuthCookies } from "../services/authService.mjs";
+import { REFRESH_COOKIE_NAME } from "../utils/cookieUtil.mjs";
 
 const postRegister = async (req, res) => {
   const { firstName, lastName, email, password } =
@@ -70,8 +72,6 @@ const getActivateAccount = async (req, res) => {
 const postLogin = async (req, res) => {
   const { email, password } = await loginValidator.validate(req.body);
 
-  console.log(email);
-
   const user = await getUserByEmail(email);
   const ACCOUNT_STATUS = Object.freeze({
     pending_verification: 1,
@@ -102,9 +102,7 @@ const postLogin = async (req, res) => {
     });
   }
 
-  const accessToken = generateAccessToken(user.id);
-
-  setAccessCookie(res, accessToken);
+  await issueAuthCookies(res, user.id);
 
   return res.status(200).json({ message: "User logged in" });
 };
@@ -167,6 +165,27 @@ const postResetPassword = async (req, res) => {
   });
 };
 
+const postRefreshToken = async (req, res) => {
+  const refreshToken = req.cookies[REFRESH_COOKIE_NAME];
+
+  if (!refreshToken) {
+    throw new UnauthorizedError("Invalid refresh token");
+  }
+
+  const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+  const tokenHash = hashToken(refreshToken);
+
+  const validRefreshToken = await getRefreshTokenByHash(tokenHash);
+
+  if (!validRefreshToken) {
+    throw new UnauthorizedError("Invalid refresh token");
+  }
+
+  await issueAuthCookies(res, decoded.sub);
+
+  return res.json({ message: "Tokens refreshed" });
+};
+
 const postLogout = async (req, res) => {
   const cookieName = isProduction ? "__Host-access_token" : "access_token";
 
@@ -184,4 +203,5 @@ export {
   postForgotPassword,
   postResetPassword,
   postLogout,
+  postRefreshToken,
 };
