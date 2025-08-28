@@ -1,6 +1,6 @@
 import sql from "../database/sql.mjs";
 
-export async function createRefreshToken(userId, tokenHash, expiresAt) {
+export async function upsertRefreshToken(userId, tokenHash, expiresAt) {
   const result = await sql`
     INSERT INTO auth.refresh_tokens (user_id, token_hash, expires_at)
     VALUES (${userId}, ${tokenHash}, ${expiresAt})

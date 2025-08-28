@@ -1,4 +1,4 @@
-import { createRefreshToken } from "../models/refreshTokenModel.mjs";
+import { upsertRefreshToken } from "../models/refreshTokenModel.mjs";
 import { setAccessCookie, setRefreshCookie } from "../utils/cookieUtil.mjs";
 import { generateJwtToken, hashToken } from "../utils/tokenUtil.mjs";
 
@@ -24,7 +24,7 @@ export async function issueAuthCookies(res, userId) {
       parseInt(process.env.REFRESH_TOKEN_EXPIRY_DAYS, 10) * 24 * 60 * 60 * 1000,
   );
 
-  await createRefreshToken(userId, tokenHash, expiresAt);
+  await upsertRefreshToken(userId, tokenHash, expiresAt);
 
   setRefreshCookie(res, refreshToken);
 }
