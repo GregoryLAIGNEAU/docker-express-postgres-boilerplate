@@ -15,3 +15,16 @@ export async function upsertRefreshToken(userId, tokenHash, expiresAt) {
 
   return result[0];
 }
+
+export async function getRefreshTokenByHash(tokenHash) {
+  const result = await sql`
+    SELECT *
+    FROM auth.refresh_tokens
+    WHERE token_hash = ${tokenHash}
+      AND expires_at > CURRENT_TIMESTAMP
+      AND revoked_at IS NULL
+    LIMIT 1;
+  `;
+
+  return result[0] || null;
+}
