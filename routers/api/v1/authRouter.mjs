@@ -6,6 +6,7 @@ import {
   postForgotPassword,
   postResetPassword,
   postLogout,
+  postRefreshToken
 } from "../../../controllers/authController.mjs";
 import jwtAuthMiddleware from "../../../middlewares/jwtAuthMiddleware.mjs";
 
@@ -20,6 +21,8 @@ authRouter.post("/login", postLogin);
 authRouter.post("/forgot-password", postForgotPassword);
 
 authRouter.post("/reset-password/reset", postResetPassword);
+
+authRouter.post("/refresh-token", postRefreshToken);
 
 authRouter.post("/logout", jwtAuthMiddleware, postLogout);
 
