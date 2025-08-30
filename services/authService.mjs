@@ -1,5 +1,10 @@
 import { upsertRefreshToken } from "../models/refreshTokenModel.mjs";
-import { setAccessCookie, setRefreshCookie } from "../utils/cookieUtil.mjs";
+import {
+  clearAccessCookie,
+  clearRefreshCookie,
+  setAccessCookie,
+  setRefreshCookie,
+} from "../utils/cookieUtil.mjs";
 import { generateJwtToken, hashToken } from "../utils/tokenUtil.mjs";
 
 export async function issueAuthCookies(res, userId) {
@@ -28,3 +33,8 @@ export async function issueAuthCookies(res, userId) {
 
   setRefreshCookie(res, refreshToken);
 }
+
+export const clearAuthCookies = (res) => {
+  clearAccessCookie(res);
+  clearRefreshCookie(res);
+};
