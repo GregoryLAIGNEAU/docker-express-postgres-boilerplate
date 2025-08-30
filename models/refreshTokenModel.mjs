@@ -1,7 +1,7 @@
 import sql from "../database/sql.mjs";
 
 export async function upsertRefreshToken(userId, tokenHash, expiresAt) {
-  const result = await sql`
+  await sql`
     INSERT INTO auth.refresh_tokens (user_id, token_hash, expires_at)
     VALUES (${userId}, ${tokenHash}, ${expiresAt})
     ON CONFLICT (user_id) 
@@ -12,8 +12,6 @@ export async function upsertRefreshToken(userId, tokenHash, expiresAt) {
       revoked_at = NULL
     RETURNING *;
   `;
-
-  return result[0];
 }
 
 export async function getRefreshTokenByHash(tokenHash) {
@@ -26,5 +24,17 @@ export async function getRefreshTokenByHash(tokenHash) {
     LIMIT 1;
   `;
 
-  return result[0] || null;
+  return result.length > 0;
+}
+
+export async function revokeRefreshToken(tokenHash) {
+  const result = await sql`
+    UPDATE auth.refresh_tokens
+    SET revoked_at = CURRENT_TIMESTAMP
+    WHERE token_hash = ${tokenHash}
+      AND revoked_at IS NULL
+    RETURNING *;
+  `;
+
+  return result.length > 0;
 }
