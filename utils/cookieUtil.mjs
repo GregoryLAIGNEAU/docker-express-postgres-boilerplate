@@ -13,3 +13,10 @@ export const setAccessCookie = (res, accessToken) =>
 
 export const setRefreshCookie = (res, refreshToken) =>
   setCookie(res, REFRESH_COOKIE_NAME, refreshToken, refreshCookieOptions);
+
+export const clearAccessCookie = (res) =>
+  res.clearCookie(ACCESS_COOKIE_NAME, accessCookieOptions); 
+
+export const clearRefreshCookie = (res) =>
+  res.clearCookie(REFRESH_COOKIE_NAME, refreshCookieOptions);
+
