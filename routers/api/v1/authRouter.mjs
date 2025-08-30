@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   postRegister,
   getActivateAccount,
+  postResendVerification,
   postLogin,
   postForgotPassword,
   postResetPassword,
@@ -15,6 +16,8 @@ const authRouter = Router();
 authRouter.post("/register", postRegister);
 
 authRouter.get("/register/activate", getActivateAccount);
+
+authRouter.post("/register/resend-verification", postResendVerification);
 
 authRouter.post("/login", postLogin);
 
