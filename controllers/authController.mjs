@@ -14,17 +14,16 @@ import {
 } from "../models/userModel.mjs";
 import { UnauthorizedError, BadRequestError } from "../errors/indexError.mjs";
 import { generateToken, hashToken } from "../utils/tokenUtil.mjs";
-import { isProduction } from "../utils/envUtil.mjs";
-import { accessCookieOptions } from "../config/jwtCookieOptions.mjs";
 import {
   forgotPasswordValidator,
   loginValidator,
   registerValidator,
   resetPasswordValidator,
 } from "../validators/authValidator.mjs";
-import { getRefreshTokenByHash } from "../models/refreshTokenModel.mjs";
+import { getRefreshTokenByHash, revokeRefreshToken } from "../models/refreshTokenModel.mjs";
 import { issueAuthCookies } from "../services/authService.mjs";
 import { REFRESH_COOKIE_NAME } from "../utils/cookieUtil.mjs";
+import { clearAuthCookies } from "../services/authService.mjs";
 
 const postRegister = async (req, res) => {
   const { firstName, lastName, email, password } =
@@ -187,9 +186,15 @@ const postRefreshToken = async (req, res) => {
 };
 
 const postLogout = async (req, res) => {
-  const cookieName = isProduction ? "__Host-access_token" : "access_token";
+  const refreshToken = req.cookies[REFRESH_COOKIE_NAME];
 
-  res.clearCookie(cookieName, accessCookieOptions);
+  if (refreshToken) {
+    const tokenHash = hashToken(refreshToken);
+    await revokeRefreshToken(tokenHash);
+  }
+
+  clearAuthCookies(res);
+
   res.status(200).json({
     success: true,
     message: "Logged out successfully",
