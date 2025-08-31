@@ -13,8 +13,8 @@ import passport from "passport";
 import authRouter from "./routers/api/v1/authRouter.mjs";
 import csrfRouter from "./routers/api/v1/csrfRouter.mjs";
 import jwtStrategy from "./strategies/jwtStrategy.mjs";
-import logger from "./utils/loggerUtil.mjs";
-import { isProduction } from "./utils/envUtil.mjs";
+import logger from "./utilities/loggerUtility.mjs";
+import { isProduction } from "./utilities/envUtility.mjs";
 
 const app = express();
 

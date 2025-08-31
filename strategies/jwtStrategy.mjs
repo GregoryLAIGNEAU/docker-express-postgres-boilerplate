@@ -1,6 +1,6 @@
 import { ExtractJwt, Strategy as JwtStrategy } from "passport-jwt";
 import { getUserById } from "../models/userModel.mjs";
-import { ACCESS_COOKIE_NAME } from "../utils/cookieUtil.mjs";
+import { ACCESS_COOKIE_NAME } from "../utilities/cookieUtility.mjs";
 
 const cookieExtractor = (req) => {
   let token = null;
