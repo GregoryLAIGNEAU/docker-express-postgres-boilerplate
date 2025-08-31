@@ -13,6 +13,12 @@ export const registerValidator = vine.compile(
   }),
 );
 
+export const resendVerificationValidator = vine.compile(
+  vine.object({
+    email: emailSchema.clone(),
+  }),
+);
+
 export const loginValidator = vine.compile(
   vine.object({
     email: emailSchema.clone(),
