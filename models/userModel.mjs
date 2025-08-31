@@ -31,6 +31,21 @@ async function activateAccount(activationTokenHash) {
   return result.length > 0;
 }
 
+async function updateVerificationToken(email, activationTokenHash) {
+  const result = await sql`
+    UPDATE auth.users
+    SET 
+      activation_token_hash = ${activationTokenHash},
+      activation_token_hash_expires_at = NOW() + INTERVAL '15 minutes'
+    WHERE 
+      email = ${email} 
+      AND account_status_id = 1
+    RETURNING *;
+  `;
+
+  return result.length > 0;
+}
+
 async function getUserByEmail(email) {
   const [user] = await sql`
     SELECT * FROM auth.users WHERE email = ${email}
@@ -91,6 +106,7 @@ async function resetPassword(email, resetPasswordTokenHash, passwordHash) {
 export {
   createUser,
   activateAccount,
+  updateVerificationToken,
   getUserByEmail,
   getUserById,
   updateResetPasswordToken,
