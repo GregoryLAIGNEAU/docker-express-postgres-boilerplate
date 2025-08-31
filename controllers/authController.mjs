@@ -7,22 +7,27 @@ import {
 import {
   createUser,
   activateAccount,
+  updateVerificationToken,
   getUserByEmail,
   updateResetPasswordToken,
   verifyResetPasswordToken,
   resetPassword,
 } from "../models/userModel.mjs";
 import { UnauthorizedError, BadRequestError } from "../errors/indexError.mjs";
-import { generateToken, hashToken } from "../utils/tokenUtil.mjs";
+import { generateToken, hashToken } from "../utilities/tokenUtility.mjs";
 import {
   forgotPasswordValidator,
+  resendVerificationValidator,
   loginValidator,
   registerValidator,
   resetPasswordValidator,
 } from "../validators/authValidator.mjs";
-import { getRefreshTokenByHash, revokeRefreshToken } from "../models/refreshTokenModel.mjs";
+import {
+  getRefreshTokenByHash,
+  revokeRefreshToken,
+} from "../models/refreshTokenModel.mjs";
 import { issueAuthCookies } from "../services/authService.mjs";
-import { REFRESH_COOKIE_NAME } from "../utils/cookieUtil.mjs";
+import { REFRESH_COOKIE_NAME } from "../utilities/cookieUtility.mjs";
 import { clearAuthCookies } from "../services/authService.mjs";
 
 const postRegister = async (req, res) => {
@@ -66,6 +71,43 @@ const getActivateAccount = async (req, res) => {
   }
 
   return res.status(200).json({ success: true });
+};
+
+const postResendVerification = async (req, res) => {
+  const { email } = await resendVerificationValidator.validate(req.body);
+
+  const user = await getUserByEmail(email);
+  const ACCOUNT_STATUS = Object.freeze({
+    pending_verification: 1,
+    suspended: 3,
+  });
+
+  if (!user) {
+    return res.status(200).json({
+      message:
+        "If an account exists with that email, a verification link has been sent",
+      email: email,
+    });
+  }
+
+  if (user.account_status_id !== ACCOUNT_STATUS.pending_verification) {
+    throw new BadRequestError(
+      "Account is already activated or cannot be activated.",
+    );
+  }
+
+  const activationToken = generateToken();
+  const activationTokenHash = hashToken(activationToken);
+
+  await updateVerificationToken(user.email, activationTokenHash);
+
+  await sendActivationEmail(user.email, activationToken);
+
+  return res.status(200).json({
+    message:
+      "If an account exists with that email, a verification link has been sent",
+    email: email,
+  });
 };
 
 const postLogin = async (req, res) => {
@@ -204,6 +246,7 @@ const postLogout = async (req, res) => {
 export {
   postRegister,
   getActivateAccount,
+  postResendVerification,
   postLogin,
   postForgotPassword,
   postResetPassword,
