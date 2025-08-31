@@ -29,6 +29,7 @@ import {
 import { issueAuthCookies } from "../services/authService.mjs";
 import { REFRESH_COOKIE_NAME } from "../utilities/cookieUtility.mjs";
 import { clearAuthCookies } from "../services/authService.mjs";
+import { ACCOUNT_STATUS } from "../constants/accountStatusConstant.mjs";
 
 const postRegister = async (req, res) => {
   const { firstName, lastName, email, password } =
@@ -77,10 +78,6 @@ const postResendVerification = async (req, res) => {
   const { email } = await resendVerificationValidator.validate(req.body);
 
   const user = await getUserByEmail(email);
-  const ACCOUNT_STATUS = Object.freeze({
-    pending_verification: 1,
-    suspended: 3,
-  });
 
   if (!user) {
     return res.status(200).json({
@@ -114,10 +111,6 @@ const postLogin = async (req, res) => {
   const { email, password } = await loginValidator.validate(req.body);
 
   const user = await getUserByEmail(email);
-  const ACCOUNT_STATUS = Object.freeze({
-    pending_verification: 1,
-    suspended: 3,
-  });
 
   if (!user) {
     return res.status(401).json({ message: "Invalid email or password" });
