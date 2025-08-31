@@ -1,35 +1,37 @@
 import * as argon2 from "argon2";
 import jwt from "jsonwebtoken";
+import { ACCOUNT_STATUS } from "../constants/accountStatusConstant.mjs";
+import { BadRequestError, UnauthorizedError } from "../errors/indexError.mjs";
 import {
   sendActivationEmail,
   sendResetPasswordEmail,
 } from "../mailer/authMailer.mjs";
 import {
-  createUser,
-  activateAccount,
-  updateVerificationToken,
-  getUserByEmail,
-  updateResetPasswordToken,
-  verifyResetPasswordToken,
-  resetPassword,
-} from "../models/userModel.mjs";
-import { UnauthorizedError, BadRequestError } from "../errors/indexError.mjs";
-import { generateToken, hashToken } from "../utilities/tokenUtility.mjs";
-import {
-  forgotPasswordValidator,
-  resendVerificationValidator,
-  loginValidator,
-  registerValidator,
-  resetPasswordValidator,
-} from "../validators/authValidator.mjs";
-import {
   getRefreshTokenByHash,
   revokeRefreshToken,
 } from "../models/refreshTokenModel.mjs";
-import { issueAuthCookies } from "../services/authService.mjs";
+import {
+  activateAccount,
+  createUser,
+  getUserByEmail,
+  resetPassword,
+  updateResetPasswordToken,
+  updateVerificationToken,
+  verifyResetPasswordToken,
+} from "../models/userModel.mjs";
+import {
+  clearAuthCookies,
+  issueAuthCookies,
+} from "../services/authService.mjs";
 import { REFRESH_COOKIE_NAME } from "../utilities/cookieUtility.mjs";
-import { clearAuthCookies } from "../services/authService.mjs";
-import { ACCOUNT_STATUS } from "../constants/accountStatusConstant.mjs";
+import { generateToken, hashToken } from "../utilities/tokenUtility.mjs";
+import {
+  forgotPasswordValidator,
+  loginValidator,
+  registerValidator,
+  resendVerificationValidator,
+  resetPasswordValidator,
+} from "../validators/authValidator.mjs";
 
 const postRegister = async (req, res) => {
   const { firstName, lastName, email, password } =
