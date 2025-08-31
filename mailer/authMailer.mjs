@@ -1,7 +1,7 @@
 import transporter from "../config/mailerConfig.mjs";
 
-const sendActivationEmail = async (email, activationToken) => {
-  const activationLink = `${process.env.BASE_URL}/register/activate?token=${activationToken}`;
+export const sendActivationEmail = async (email, activationToken) => {
+  const activationLink = `${process.env.BASE_URL}/api/v1/register/activate?token=${activationToken}`;
 
   const mailOptions = {
     to: email,
@@ -29,12 +29,12 @@ const sendActivationEmail = async (email, activationToken) => {
   return transporter.sendMail(mailOptions);
 };
 
-const sendResetPasswordEmail = async (email, resetPasswordToken) => {
-  const resetPasswordLink = `${process.env.BASE_URL}/reset-password/reset?token=${resetPasswordToken}`;
+export const sendResetPasswordEmail = async (email, resetPasswordToken) => {
+  const resetPasswordLink = `${process.env.BASE_URL}/api/v1/reset-password/reset?token=${resetPasswordToken}`;
 
   const mailOptions = {
     to: email,
-    subject: 'Reset Your Password',
+    subject: "Reset Your Password",
     text: `
       Hi,
 
@@ -60,5 +60,3 @@ const sendResetPasswordEmail = async (email, resetPasswordToken) => {
 
   return transporter.sendMail(mailOptions);
 };
-
-export { sendActivationEmail, sendResetPasswordEmail };
