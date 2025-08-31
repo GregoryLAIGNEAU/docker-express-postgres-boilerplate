@@ -1,5 +1,5 @@
-import { isProduction } from "../utils/envUtil.mjs";
 import jwt from "jsonwebtoken";
+import { isProduction } from "../utilities/envUtility.mjs";
 
 const doubleCsrfOptions = {
   getSecret: () => process.env.CSRF_SECRET,

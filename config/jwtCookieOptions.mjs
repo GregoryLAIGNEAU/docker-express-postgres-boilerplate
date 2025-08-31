@@ -1,4 +1,4 @@
-import { isProduction } from "../utils/envUtil.mjs";
+import { isProduction } from "../utilities/envUtility.mjs";
 
 export const accessCookieOptions = {
   httpOnly: true,
