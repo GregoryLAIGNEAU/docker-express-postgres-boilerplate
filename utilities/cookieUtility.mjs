@@ -1,8 +1,5 @@
 import { accessCookieOptions, refreshCookieOptions } from "../config/jwtCookieOptions.mjs";
-import { isProduction } from "./envUtility.mjs";
-
-export const ACCESS_COOKIE_NAME = isProduction ? "__Host-access_token" : "access_token";
-export const REFRESH_COOKIE_NAME = isProduction ? "__Host-refresh_token" : "refresh_token";
+import { ACCESS_COOKIE_NAME, REFRESH_COOKIE_NAME } from "../constants/cookieConstant.mjs";
 
 export const setAccessCookie = (res, accessToken) =>
   res.cookie(ACCESS_COOKIE_NAME, accessToken, accessCookieOptions);
