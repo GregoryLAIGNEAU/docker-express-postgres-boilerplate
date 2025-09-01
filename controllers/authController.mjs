@@ -1,6 +1,7 @@
 import * as argon2 from "argon2";
 import jwt from "jsonwebtoken";
 import { ACCOUNT_STATUS } from "../constants/accountStatusConstant.mjs";
+import { REFRESH_COOKIE_NAME } from "../constants/cookieConstant.mjs";
 import { BadRequestError, UnauthorizedError } from "../errors/indexError.mjs";
 import {
   sendActivationEmail,
@@ -23,7 +24,6 @@ import {
   clearAuthCookies,
   issueAuthCookies,
 } from "../services/authService.mjs";
-import { REFRESH_COOKIE_NAME } from "../utilities/cookieUtility.mjs";
 import { generateToken, hashToken } from "../utilities/tokenUtility.mjs";
 import {
   forgotPasswordValidator,
