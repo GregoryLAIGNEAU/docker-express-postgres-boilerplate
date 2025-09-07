@@ -1,13 +1,35 @@
-FROM node:22-alpine
-ARG NODE_ENV
-WORKDIR /usr/src/app
-COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "./"]
-RUN if [ "$NODE_ENV" = "production" ]; \
-    then npm install --production --silent; \
-    else npm install; \
-    fi
-COPY . .
-EXPOSE 3000
-RUN chown -R node /usr/src/app
+FROM node:22-alpine AS base
+
+WORKDIR /app
+
+EXPOSE 5000
+
 USER node
+
+FROM base AS development
+
+COPY package*.json ./
+
+USER root
+
+RUN --mount=type=cache,target=/root/.npm npm ci
+
+USER node
+
+COPY . ./
+
+CMD ["npm", "run", "dev"]
+
+FROM base AS production
+
+COPY package*.json .
+
+USER root
+
+RUN --mount=type=cache,target=/root/.npm npm ci --omit=development
+
+USER node
+
+COPY . ./
+
 CMD ["npm", "start"]
