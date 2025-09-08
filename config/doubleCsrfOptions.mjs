@@ -9,7 +9,7 @@ const doubleCsrfOptions = {
   getSecret: () => process.env.CSRF_SECRET,
   getSessionIdentifier: (req) => {
     const token = req.cookies?.[ACCESS_COOKIE_NAME];
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
 
     return decoded.sid;
   },
