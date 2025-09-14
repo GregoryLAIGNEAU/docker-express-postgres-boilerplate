@@ -62,6 +62,21 @@ async function getUserById(id) {
   return user;
 }
 
+async function updateUserById(id, user) {
+  if (Object.keys(user).length === 0) return null;
+
+  const columns = Object.keys(user);
+
+  const result = await sql`
+    update auth.users
+    set ${sql(user, columns)}, updated_at = NOW()
+    where id = ${id}
+    returning *
+  `;
+
+  return result[0] || null;
+}
+
 async function updateResetPasswordToken(id, resetPasswordTokenHash) {
   await sql`
     UPDATE auth.users 
@@ -107,6 +122,7 @@ export {
   createUser,
   activateAccount,
   updateVerificationToken,
+  updateUserById,
   getUserByEmail,
   getUserById,
   updateResetPasswordToken,
