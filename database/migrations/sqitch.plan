@@ -6,6 +6,6 @@ authschema 2025-08-23T12:31:03Z Gregory LAIGNEAU <gregory.laigneau@mail.com> # C
 account_statuses 2025-08-23T12:40:14Z Gregory LAIGNEAU <gregory.laigneau@mail.com> # Create account_statuses table
 roles 2025-08-23T12:46:26Z Gregory LAIGNEAU <gregory.laigneau@mail.com> # Create roles table
 users 2025-08-23T13:15:32Z Gregory LAIGNEAU <gregory.laigneau@mail.com> # Create users table
-seed-account-statuses 2025-08-23T17:09:35Z Gregory LAIGNEAU <gregory.laigneau@mail.com> # Seed default account statuses
-seed-roles 2025-08-23T17:14:16Z Gregory LAIGNEAU <gregory.laigneau@mail.com> # Seed default roles
+seed_account_statuses 2025-08-23T17:09:35Z Gregory LAIGNEAU <gregory.laigneau@mail.com> # Seed default account statuses
+seed_roles 2025-08-23T17:14:16Z Gregory LAIGNEAU <gregory.laigneau@mail.com> # Seed default roles
 refresh_tokens 2025-08-27T13:41:35Z Gregory LAIGNEAU <gregory.laigneau@mail.com> # Create refresh_tokens table
