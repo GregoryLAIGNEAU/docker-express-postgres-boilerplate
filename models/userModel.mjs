@@ -5,7 +5,7 @@ async function createUser(
   lastName,
   email,
   passwordHash,
-  activationTokenHash
+  activationTokenHash,
 ) {
   await sql`
     INSERT INTO auth.users 
