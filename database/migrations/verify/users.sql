@@ -76,6 +76,10 @@ BEGIN
     RAISE EXCEPTION 'Column "updated_at" is missing in "auth.users" table!';
   END IF;
 
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'deleted_at') THEN
+    RAISE EXCEPTION 'Column "deleted_at" is missing in "auth.users" table!';
+  END IF;
+
 END
 $$;
 
