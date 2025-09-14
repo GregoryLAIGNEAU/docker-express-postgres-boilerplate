@@ -8,6 +8,7 @@ INSERT INTO
 VALUES
   ('pending_verification'),
   ('active'),
+  ('deactivated'),
   ('suspended');
 
 COMMIT;
