@@ -131,10 +131,17 @@ const postLogin = async (req, res) => {
     });
   }
 
+  if (user.account_status_id === ACCOUNT_STATUS.deactivated) {
+    return res.status(400).json({
+      message:
+        "Your account is deactivated. Please contact support for assistance.",
+    });
+  }
+
   if (user.account_status_id === ACCOUNT_STATUS.suspended) {
     return res.status(400).json({
       message:
-        "Your account has been suspended. Please contact support for assistance.",
+        "Your account is suspended. Please contact support for assistance.",
     });
   }
 
