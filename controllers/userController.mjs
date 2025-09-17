@@ -1,4 +1,5 @@
 import { ACCOUNT_STATUS } from "../constants/accountStatusConstant.mjs";
+import { NotFoundError } from "../errors/indexError.mjs";
 import { getUserById, updateUserById } from "../models/userModel.mjs";
 import { updateUserValidator } from "../validators/userValidator.mjs";
 
@@ -8,7 +9,7 @@ export const getUser = async (req, res) => {
   const user = await getUserById(currentUserId);
 
   if (!user) {
-    return res.status(404).json({ message: "User not found" });
+    throw new NotFoundError("User not found");
   }
 
   return res.status(200).json(user);
@@ -23,7 +24,7 @@ export const updateUser = async (req, res) => {
   const updatedUser = await updateUserById(currentUserId, payload);
 
   if (!updatedUser) {
-    return res.status(404).json({ message: "User not found" });
+    throw new NotFoundError("User not found");
   }
 
   return res.status(200).json(updatedUser);
@@ -39,10 +40,7 @@ export const deleteUser = async (req, res) => {
   const updatedUser = await updateUserById(currentUserId, payload);
 
   if (!updatedUser) {
-    return res.status(404).json({
-      success: false,
-      message: "User not found",
-    });
+    throw new NotFoundError("User not found");
   }
 
   return res.status(200).json({
