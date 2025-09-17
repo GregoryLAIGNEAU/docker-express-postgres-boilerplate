@@ -9,6 +9,12 @@ export const updateUserValidator = vine.compile(
     email: emailSchema
       .clone()
       .optional()
-      .use(uniqueRule({ table: "auth.users", column: "email" })),
+      .use(
+        uniqueRule({
+          table: "auth.users",
+          column: "email",
+          exclude: { column: "id", value: "userId" },
+        }),
+      ),
   }),
 );

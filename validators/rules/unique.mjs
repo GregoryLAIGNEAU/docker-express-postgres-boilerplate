@@ -6,14 +6,18 @@ async function unique(value, options, field) {
     return;
   }
 
-  const rows = await sql`
-    SELECT ${sql(options.column)}
-    FROM ${sql(options.table)}
-    WHERE ${sql(options.column)} = ${value}
+  const { table, column, exclude } = options;
+  const excludeValue = field.meta?.[exclude?.value];
+
+  const [row] = await sql`
+    SELECT ${sql(column)}
+    FROM ${sql(table)}
+    WHERE ${sql(column)} = ${value}
+      ${exclude ? sql`AND ${sql(exclude.column)} != ${excludeValue}` : sql``}
     LIMIT 1
   `;
 
-  if (rows.length > 0) {
+  if (row) {
     field.report("The {{ field }} field is not unique", "unique", field);
   }
 }
