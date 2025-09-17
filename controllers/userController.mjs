@@ -17,7 +17,9 @@ export const getUser = async (req, res) => {
 export const updateUser = async (req, res) => {
   const currentUserId = req.user.id;
 
-  const payload = await updateUserValidator.validate(req.body);
+  const payload = await updateUserValidator.validate(req.body, {
+    meta: { userId: currentUserId },
+  });
   const updatedUser = await updateUserById(currentUserId, payload);
 
   if (!updatedUser) {
