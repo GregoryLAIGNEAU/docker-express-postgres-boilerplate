@@ -16,6 +16,7 @@ import jwtStrategy from "./strategies/jwtStrategy.mjs";
 import logger from "./utilities/loggerUtility.mjs";
 import { isProduction } from "./utilities/envUtility.mjs";
 import userRouter from "./routers/api/v1/userRouter.mjs";
+import { csrfErrorHandlerMiddleware } from "./middlewares/csrfErrorHandlerMiddleware.mjs";
 
 const app = express();
 
@@ -44,6 +45,7 @@ app.use(doubleCsrfProtection);
 app.use("/api/v1/users", userRouter);
 
 app.use(notFoundMiddleware);
+app.use(csrfErrorHandlerMiddleware);
 app.use(errorHandlerMiddleware);
 
 const PORT = Number(process.env.PORT) || 5000;
