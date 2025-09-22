@@ -1,6 +1,6 @@
 import { NotFoundError } from "../errors/indexError.mjs";
 
-const notFoundMiddleware = (req, res, next) => {
+const notFoundMiddleware = (_req, _res, next) => {
   next(new NotFoundError());
 };
 
