@@ -53,7 +53,7 @@ const postRegister = async (req, res) => {
   await sendActivationEmail(email, activationToken);
 
   res.status(201).json({
-    message: "User registered successfully",
+    message: "You have registered successfully",
     email: email,
   });
 };
@@ -62,7 +62,9 @@ const getActivateAccount = async (req, res) => {
   const { token } = req.query;
 
   if (!token || typeof token !== "string" || token.length !== 64) {
-    return res.status(400).json({ success: false });
+    throw new BadRequestError(
+      "This activation link is invalid or has expired. Please request a new one.",
+    );
   }
 
   const activationTokenHash = hashToken(token);
@@ -70,10 +72,14 @@ const getActivateAccount = async (req, res) => {
   const user = await activateAccount(activationTokenHash);
 
   if (!user) {
-    return res.status(400).json({ success: false });
+    throw new BadRequestError(
+      "This activation link is invalid or has expired. Please request a new one.",
+    );
   }
 
-  return res.status(200).json({ success: true });
+  return res
+    .status(200)
+    .json({ message: "Your account has been activated successfully." });
 };
 
 const postResendVerification = async (req, res) => {
@@ -84,14 +90,14 @@ const postResendVerification = async (req, res) => {
   if (!user) {
     return res.status(200).json({
       message:
-        "If an account exists with that email, a verification link has been sent",
+        "If an account exists with that email, a verification link has been sent.",
       email: email,
     });
   }
 
   if (user.account_status_id !== ACCOUNT_STATUS.pending_verification) {
     throw new BadRequestError(
-      "Account is already activated or cannot be activated.",
+      "Your account is already activated or cannot be activated.",
     );
   }
 
@@ -104,7 +110,7 @@ const postResendVerification = async (req, res) => {
 
   return res.status(200).json({
     message:
-      "If an account exists with that email, a verification link has been sent",
+      "If an account exists with that email, a verification link has been sent.",
     email: email,
   });
 };
@@ -115,39 +121,36 @@ const postLogin = async (req, res) => {
   const user = await getUserByEmail(email);
 
   if (!user) {
-    return res.status(401).json({ message: "Invalid email or password" });
+    throw new UnauthorizedError("Invalid email or password");
   }
 
   const passwordMatch = await argon2.verify(user.password_hash, password);
 
   if (!passwordMatch) {
-    return res.status(401).json({ message: "Invalid email or password" });
+    throw new UnauthorizedError("Invalid email or password");
   }
 
   if (user.account_status_id === ACCOUNT_STATUS.pending_verification) {
-    return res.status(400).json({
-      message:
-        "Your email verification is pending. Please verify your email to continue.",
-    });
+    throw new BadRequestError(
+      "Your email verification is pending. Please verify your email to continue.",
+    );
   }
 
   if (user.account_status_id === ACCOUNT_STATUS.deactivated) {
-    return res.status(400).json({
-      message:
-        "Your account is deactivated. Please contact support for assistance.",
-    });
+    throw new BadRequestError(
+      "Your account is deactivated. Please contact support for assistance.",
+    );
   }
 
   if (user.account_status_id === ACCOUNT_STATUS.suspended) {
-    return res.status(400).json({
-      message:
-        "Your account is suspended. Please contact support for assistance.",
-    });
+    throw new BadRequestError(
+      "Your account is suspended. Please contact support for assistance.",
+    );
   }
 
   await issueAuthCookies(res, user.id);
 
-  return res.status(200).json({ message: "User logged in" });
+  return res.status(200).json({ message: "You have been logged in successfully" });
 };
 
 const postForgotPassword = async (req, res) => {
@@ -167,7 +170,7 @@ const postForgotPassword = async (req, res) => {
 
   res.status(200).json({
     message:
-      "If an account exists with that email, a password reset link has been sent",
+      "If an account exists with that email, a password reset link has been sent.",
     email: email,
   });
 };
@@ -178,14 +181,14 @@ const postResetPassword = async (req, res) => {
     await resetPasswordValidator.validate(req.body);
 
   if (!token || typeof token !== "string" || token.length !== 64) {
-    throw new UnauthorizedError(
-      "Oops! It seems there was an issue with your password reset request. Please try again or request a new link.",
+    throw new BadRequestError(
+      "This password reset link is invalid or has expired. Please request a new one.",
     );
   }
 
   if (password !== confirmPassword) {
     throw new BadRequestError(
-      "Oops! Your passwords don't match. Please double-check and try again.",
+      "Your passwords don't match. Please double-check and try again.",
     );
   }
 
@@ -195,7 +198,7 @@ const postResetPassword = async (req, res) => {
 
   if (!user) {
     throw new UnauthorizedError(
-      "Oops! It seems there was an issue with your password reset request. Please try again or request a new link.",
+      "It seems there was an issue with your password reset request. Please try again or request a new one.",
     );
   }
 
@@ -204,7 +207,7 @@ const postResetPassword = async (req, res) => {
   await resetPassword(email, resetPasswordTokenHash, passwordHash);
 
   res.status(200).json({
-    message: "Password successfully reset",
+    message: "Your password has been reset successfully",
   });
 };
 
@@ -226,7 +229,7 @@ const postRefreshToken = async (req, res) => {
 
   await issueAuthCookies(res, decoded.sub);
 
-  return res.json({ message: "Tokens refreshed" });
+  return res.status(200).json({ message: "Tokens refreshed successfully" });
 };
 
 const postLogout = async (req, res) => {
@@ -240,8 +243,7 @@ const postLogout = async (req, res) => {
   clearAuthCookies(res);
 
   res.status(200).json({
-    success: true,
-    message: "Logged out successfully",
+    message: "You have been logged out successfully",
   });
 };
 
