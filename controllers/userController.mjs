@@ -44,7 +44,6 @@ export const deleteUser = async (req, res) => {
   }
 
   return res.status(200).json({
-    success: true,
-    message: "User deactivated successfully",
+    message: "Your account has been deactivated successfully",
   });
 };
