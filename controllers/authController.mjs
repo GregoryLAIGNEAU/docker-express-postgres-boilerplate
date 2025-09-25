@@ -33,7 +33,7 @@ import {
   resetPasswordValidator,
 } from "../validators/authValidator.mjs";
 
-const postRegister = async (req, res) => {
+export const postRegister = async (req, res) => {
   const { firstName, lastName, email, password } =
     await registerValidator.validate(req.body);
 
@@ -58,7 +58,7 @@ const postRegister = async (req, res) => {
   });
 };
 
-const getActivateAccount = async (req, res) => {
+export const getActivateAccount = async (req, res) => {
   const { token } = req.query;
 
   if (!token || typeof token !== "string" || token.length !== 64) {
@@ -82,7 +82,7 @@ const getActivateAccount = async (req, res) => {
     .json({ message: "Your account has been activated successfully." });
 };
 
-const postResendVerification = async (req, res) => {
+export const postResendVerification = async (req, res) => {
   const { email } = await resendVerificationValidator.validate(req.body);
 
   const user = await getUserByEmail(email);
@@ -115,7 +115,7 @@ const postResendVerification = async (req, res) => {
   });
 };
 
-const postLogin = async (req, res) => {
+export const postLogin = async (req, res) => {
   const { email, password } = await loginValidator.validate(req.body);
 
   const user = await getUserByEmail(email);
@@ -150,10 +150,12 @@ const postLogin = async (req, res) => {
 
   await issueAuthCookies(res, user.id);
 
-  return res.status(200).json({ message: "You have been logged in successfully" });
+  return res
+    .status(200)
+    .json({ message: "You have been logged in successfully" });
 };
 
-const postForgotPassword = async (req, res) => {
+export const postForgotPassword = async (req, res) => {
   const { email } = await forgotPasswordValidator.validate(req.body);
 
   const user = await getUserByEmail(email);
@@ -175,7 +177,7 @@ const postForgotPassword = async (req, res) => {
   });
 };
 
-const postResetPassword = async (req, res) => {
+export const postResetPassword = async (req, res) => {
   const { token } = req.query;
   const { email, password, confirmPassword } =
     await resetPasswordValidator.validate(req.body);
@@ -211,7 +213,7 @@ const postResetPassword = async (req, res) => {
   });
 };
 
-const postRefreshToken = async (req, res) => {
+export const postRefreshToken = async (req, res) => {
   const refreshToken = req.cookies[REFRESH_COOKIE_NAME];
 
   if (!refreshToken) {
@@ -232,7 +234,7 @@ const postRefreshToken = async (req, res) => {
   return res.status(200).json({ message: "Tokens refreshed successfully" });
 };
 
-const postLogout = async (req, res) => {
+export const postLogout = async (req, res) => {
   const refreshToken = req.cookies[REFRESH_COOKIE_NAME];
 
   if (refreshToken) {
@@ -245,15 +247,4 @@ const postLogout = async (req, res) => {
   res.status(200).json({
     message: "You have been logged out successfully",
   });
-};
-
-export {
-  postRegister,
-  getActivateAccount,
-  postResendVerification,
-  postLogin,
-  postForgotPassword,
-  postResetPassword,
-  postLogout,
-  postRefreshToken,
 };
