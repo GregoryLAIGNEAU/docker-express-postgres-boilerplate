@@ -1,32 +1,26 @@
 import { Router } from "express";
-import {
-  postRegister,
-  getActivateAccount,
-  postResendVerification,
-  postLogin,
-  postForgotPassword,
-  postResetPassword,
-  postLogout,
-  postRefreshToken
-} from "../../../controllers/authController.mjs";
+import { authController } from "../../../controllers/index.mjs";
 import jwtAuthMiddleware from "../../../middlewares/jwtAuthMiddleware.mjs";
 
 const authRouter = Router();
 
-authRouter.post("/register", postRegister);
+authRouter.post("/register", authController.postRegister);
 
-authRouter.get("/register/activate", getActivateAccount);
+authRouter.get("/register/activate", authController.getActivateAccount);
 
-authRouter.post("/register/resend-verification", postResendVerification);
+authRouter.post(
+  "/register/resend-verification",
+  authController.postResendVerification,
+);
 
-authRouter.post("/login", postLogin);
+authRouter.post("/login", authController.postLogin);
 
-authRouter.post("/forgot-password", postForgotPassword);
+authRouter.post("/forgot-password", authController.postForgotPassword);
 
-authRouter.post("/reset-password/reset", postResetPassword);
+authRouter.post("/reset-password/reset", authController.postResetPassword);
 
-authRouter.post("/refresh-token", postRefreshToken);
+authRouter.post("/refresh-token", authController.postRefreshToken);
 
-authRouter.post("/logout", jwtAuthMiddleware, postLogout);
+authRouter.post("/logout", jwtAuthMiddleware, authController.postLogout);
 
 export default authRouter;
