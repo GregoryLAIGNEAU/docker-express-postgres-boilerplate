@@ -16,6 +16,9 @@
   "author": "",
   "license": "MIT",
   "type": "module",
+  "imports": {
+    "#controllers/*": "./controllers/*"
+  },
   "bugs": {
     "url": "https://github.com/GregoryLAIGNEAU/docker-express-postgres-boilerplate/issues"
   },
