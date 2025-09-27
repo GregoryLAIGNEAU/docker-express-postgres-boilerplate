@@ -17,6 +17,7 @@
   "license": "MIT",
   "type": "module",
   "imports": {
+    "#constants/*": "./constants/*",
     "#controllers/*": "./controllers/*",
     "#database/*": "./database/*",
     "#middlewares/*": "./middlewares/*",
