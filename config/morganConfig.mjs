@@ -28,6 +28,6 @@ const stream = {
   },
 };
 
-const skip = isProduction ? (req, res) => res.statusCode < 400 : () => false;
+const skip = isProduction ? (_req, res) => res.statusCode < 400 : () => false;
 
 export { format, stream, skip };
