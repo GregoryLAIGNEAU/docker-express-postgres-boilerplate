@@ -4,11 +4,11 @@ import express from "express";
 import helmet from "helmet";
 
 import corsOptions from "./config/corsOptions.mjs";
-import { doubleCsrfProtection } from "./middlewares/csrfMiddleware.mjs";
-import errorHandlerMiddleware from "./middlewares/errorHandlerMiddleware.mjs";
-import morganMiddleware from "./middlewares/morganMiddleware.mjs";
-import notFoundMiddleware from "./middlewares/notFoundMiddleware.mjs";
-import rateLimiterMiddleware from "./middlewares/rateLimiterMiddleware.mjs";
+import { doubleCsrfProtection } from "#middlewares/csrfMiddleware.mjs";
+import errorHandlerMiddleware from "#middlewares/errorHandlerMiddleware.mjs";
+import morganMiddleware from "#middlewares/morganMiddleware.mjs";
+import notFoundMiddleware from "#middlewares/notFoundMiddleware.mjs";
+import rateLimiterMiddleware from "#middlewares/rateLimiterMiddleware.mjs";
 import passport from "passport";
 import authRouter from "#routers/api/v1/authRouter.mjs";
 import csrfRouter from "#routers/api/v1/csrfRouter.mjs";
@@ -16,7 +16,7 @@ import jwtStrategy from "./strategies/jwtStrategy.mjs";
 import logger from "./utilities/loggerUtility.mjs";
 import { isProduction } from "./utilities/envUtility.mjs";
 import userRouter from "#routers/api/v1/userRouter.mjs";
-import { csrfErrorHandlerMiddleware } from "./middlewares/csrfErrorHandlerMiddleware.mjs";
+import { csrfErrorHandlerMiddleware } from "#middlewares/csrfErrorHandlerMiddleware.mjs";
 
 const app = express();
 
