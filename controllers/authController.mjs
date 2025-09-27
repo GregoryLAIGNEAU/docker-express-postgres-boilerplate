@@ -24,7 +24,7 @@ import {
 import {
   clearAuthCookies,
   issueAuthCookies,
-} from "../services/authService.mjs";
+} from "#services/authService.mjs";
 import { generateToken, hashToken } from "#utilities/tokenUtility.mjs";
 import {
   forgotPasswordValidator,
