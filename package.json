@@ -17,7 +17,8 @@
   "license": "MIT",
   "type": "module",
   "imports": {
-    "#controllers/*": "./controllers/*"
+    "#controllers/*": "./controllers/*",
+    "#middlewares/*": "./middlewares/*"
   },
   "bugs": {
     "url": "https://github.com/GregoryLAIGNEAU/docker-express-postgres-boilerplate/issues"
