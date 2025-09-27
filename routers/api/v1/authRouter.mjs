@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { authController } from "../../../controllers/index.mjs";
+import { authController } from "#controllers/index.mjs";
 import jwtAuthMiddleware from "../../../middlewares/jwtAuthMiddleware.mjs";
 
 const authRouter = Router();
@@ -8,10 +8,7 @@ authRouter.post("/register", authController.postRegister);
 
 authRouter.get("/register/activate", authController.getActivateAccount);
 
-authRouter.post(
-  "/register/resend-verification",
-  authController.postResendVerification,
-);
+authRouter.post("/register/resend-verification", authController.postResendVerification);
 
 authRouter.post("/login", authController.postLogin);
 

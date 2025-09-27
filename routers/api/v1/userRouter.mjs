@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { userController } from "../../../controllers/index.mjs";
+import { userController } from "#controllers/index.mjs";
 import jwtAuthMiddleware from "../../../middlewares/jwtAuthMiddleware.mjs";
 
 const userRouter = Router();
