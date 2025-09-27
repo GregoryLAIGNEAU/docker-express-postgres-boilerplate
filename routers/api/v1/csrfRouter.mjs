@@ -1,5 +1,5 @@
 import express from "express";
-import { generateCsrfToken } from "../../../middlewares/csrfMiddleware.mjs";
+import { generateCsrfToken } from "#middlewares/csrfMiddleware.mjs";
 
 const csrfRouter = express.Router();
 
