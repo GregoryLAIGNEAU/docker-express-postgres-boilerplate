@@ -1,5 +1,5 @@
 import { accessCookieOptions, refreshCookieOptions } from "../config/jwtCookieOptions.mjs";
-import { ACCESS_COOKIE_NAME, REFRESH_COOKIE_NAME } from "../constants/cookieConstant.mjs";
+import { ACCESS_COOKIE_NAME, REFRESH_COOKIE_NAME } from "#constants/cookieConstant.mjs";
 
 export const setAccessCookie = (res, accessToken) =>
   res.cookie(ACCESS_COOKIE_NAME, accessToken, accessCookieOptions);

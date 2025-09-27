@@ -1,4 +1,4 @@
-import { ACCOUNT_STATUS } from "../constants/accountStatusConstant.mjs";
+import { ACCOUNT_STATUS } from "#constants/accountStatusConstant.mjs";
 import { NotFoundError } from "../errors/indexError.mjs";
 import { getUserById, updateUserById } from "#models/userModel.mjs";
 import { updateUserValidator } from "../validators/userValidator.mjs";

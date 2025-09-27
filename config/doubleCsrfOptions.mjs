@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import {
   ACCESS_COOKIE_NAME,
   X_CSRF_TOKEN_COOKIE_NAME,
-} from "../constants/cookieConstant.mjs";
+} from "#constants/cookieConstant.mjs";
 import { isProduction } from "#utilities/envUtility.mjs";
 
 const doubleCsrfOptions = {
