@@ -1,4 +1,4 @@
-import { upsertRefreshToken } from "../models/refreshTokenModel.mjs";
+import { upsertRefreshToken } from "#models/refreshTokenModel.mjs";
 import {
   clearAccessCookie,
   clearRefreshCookie,

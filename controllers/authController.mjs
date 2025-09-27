@@ -10,7 +10,7 @@ import {
 import {
   getRefreshTokenByHash,
   revokeRefreshToken,
-} from "../models/refreshTokenModel.mjs";
+} from "#models/refreshTokenModel.mjs";
 import {
   activateAccount,
   createUser,
@@ -19,7 +19,7 @@ import {
   updateResetPasswordToken,
   updateVerificationToken,
   verifyResetPasswordToken,
-} from "../models/userModel.mjs";
+} from "#models/userModel.mjs";
 import {
   clearAuthCookies,
   issueAuthCookies,
