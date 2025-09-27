@@ -1,6 +1,6 @@
 import { createClient } from "redis";
 
-import redisConfig from "../config/redisConfig.mjs";
+import redisConfig from "#config/redisConfig.mjs";
 import logger from "./loggerUtility.mjs";
 
 const redisClient = createClient(redisConfig);

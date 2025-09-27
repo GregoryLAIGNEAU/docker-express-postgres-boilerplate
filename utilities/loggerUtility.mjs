@@ -1,7 +1,7 @@
-import { createLogger } from "winston";
-import { transports } from "winston";
+import { createLogger, transports } from "winston";
+
+import { developmentTransport, loggerConfig } from "#config/loggerConfig.mjs";
 import { isDevelopment } from "./envUtility.mjs";
-import { loggerConfig, developmentTransport } from "../config/loggerConfig.mjs";
 
 const logger = createLogger(loggerConfig);
 
