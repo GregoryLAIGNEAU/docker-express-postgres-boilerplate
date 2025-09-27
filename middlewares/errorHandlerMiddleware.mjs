@@ -1,4 +1,4 @@
-import { ApiError } from "../errors/indexError.mjs";
+import { ApiError } from "#errors/indexError.mjs";
 
 const errorHandlerMiddleware = (err, _req, res, _next) => {
   console.log(err);

@@ -2,7 +2,7 @@ import * as argon2 from "argon2";
 import jwt from "jsonwebtoken";
 import { ACCOUNT_STATUS } from "#constants/accountStatusConstant.mjs";
 import { REFRESH_COOKIE_NAME } from "#constants/cookieConstant.mjs";
-import { BadRequestError, UnauthorizedError } from "../errors/indexError.mjs";
+import { BadRequestError, UnauthorizedError } from "#errors/indexError.mjs";
 import {
   sendActivationEmail,
   sendResetPasswordEmail,
