@@ -19,7 +19,8 @@
   "imports": {
     "#controllers/*": "./controllers/*",
     "#middlewares/*": "./middlewares/*",
-    "#models/*": "./models/*"
+    "#models/*": "./models/*",
+    "#utilities/*": "./utilities/*"
   },
   "bugs": {
     "url": "https://github.com/GregoryLAIGNEAU/docker-express-postgres-boilerplate/issues"
