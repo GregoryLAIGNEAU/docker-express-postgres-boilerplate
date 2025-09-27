@@ -23,6 +23,7 @@
     "#errors/*": "./errors/*",
     "#middlewares/*": "./middlewares/*",
     "#models/*": "./models/*",
+    "#routers/*": "./routers/*",
     "#utilities/*": "./utilities/*"
   },
   "bugs": {
