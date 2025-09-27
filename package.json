@@ -20,6 +20,7 @@
     "#constants/*": "./constants/*",
     "#controllers/*": "./controllers/*",
     "#database/*": "./database/*",
+    "#errors/*": "./errors/*",
     "#middlewares/*": "./middlewares/*",
     "#models/*": "./models/*",
     "#utilities/*": "./utilities/*"
