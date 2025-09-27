@@ -18,7 +18,8 @@
   "type": "module",
   "imports": {
     "#controllers/*": "./controllers/*",
-    "#middlewares/*": "./middlewares/*"
+    "#middlewares/*": "./middlewares/*",
+    "#models/*": "./models/*"
   },
   "bugs": {
     "url": "https://github.com/GregoryLAIGNEAU/docker-express-postgres-boilerplate/issues"
