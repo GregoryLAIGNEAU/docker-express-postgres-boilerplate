@@ -4,8 +4,8 @@ import {
   clearRefreshCookie,
   setAccessCookie,
   setRefreshCookie,
-} from "../utilities/cookieUtility.mjs";
-import { generateJwtToken, hashToken } from "../utilities/tokenUtility.mjs";
+} from "#utilities/cookieUtility.mjs";
+import { generateJwtToken, hashToken } from "#utilities/tokenUtility.mjs";
 
 export async function issueAuthCookies(res, userId) {
   const accessToken = generateJwtToken(
