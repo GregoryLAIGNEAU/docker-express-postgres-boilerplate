@@ -22,6 +22,7 @@
     "#controllers/*": "./controllers/*",
     "#database/*": "./database/*",
     "#errors/*": "./errors/*",
+    "#mailer/*": "./mailer/*",
     "#middlewares/*": "./middlewares/*",
     "#models/*": "./models/*",
     "#routers/*": "./routers/*",
