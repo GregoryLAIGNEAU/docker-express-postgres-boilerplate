@@ -26,6 +26,7 @@
     "#middlewares/*": "./middlewares/*",
     "#models/*": "./models/*",
     "#routers/*": "./routers/*",
+    "#services/*": "./services/*",
     "#strategies/*": "./strategies/*",
     "#utilities/*": "./utilities/*",
     "#validators/*": "./validators/*"
