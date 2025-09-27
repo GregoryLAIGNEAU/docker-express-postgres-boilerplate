@@ -31,7 +31,7 @@ import {
   registerValidator,
   resendVerificationValidator,
   resetPasswordValidator,
-} from "../validators/authValidator.mjs";
+} from "#validators/authValidator.mjs";
 
 export const postRegister = async (req, res) => {
   const { firstName, lastName, email, password } =

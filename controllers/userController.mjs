@@ -1,7 +1,7 @@
 import { ACCOUNT_STATUS } from "#constants/accountStatusConstant.mjs";
 import { NotFoundError } from "#errors/indexError.mjs";
 import { getUserById, updateUserById } from "#models/userModel.mjs";
-import { updateUserValidator } from "../validators/userValidator.mjs";
+import { updateUserValidator } from "#validators/userValidator.mjs";
 
 export const getUser = async (req, res) => {
   const currentUserId = req.user.id;
