@@ -24,7 +24,8 @@
     "#middlewares/*": "./middlewares/*",
     "#models/*": "./models/*",
     "#routers/*": "./routers/*",
-    "#utilities/*": "./utilities/*"
+    "#utilities/*": "./utilities/*",
+    "#validators/*": "./validators/*"
   },
   "bugs": {
     "url": "https://github.com/GregoryLAIGNEAU/docker-express-postgres-boilerplate/issues"
