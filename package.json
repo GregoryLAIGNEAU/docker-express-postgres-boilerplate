@@ -18,6 +18,7 @@
   "type": "module",
   "imports": {
     "#controllers/*": "./controllers/*",
+    "#database/*": "./database/*",
     "#middlewares/*": "./middlewares/*",
     "#models/*": "./models/*",
     "#utilities/*": "./utilities/*"
