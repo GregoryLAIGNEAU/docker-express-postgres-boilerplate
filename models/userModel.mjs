@@ -1,12 +1,6 @@
-import sql from "#database/sql.mjs";
+import { sql } from "#database/sql.mjs";
 
-async function createUser(
-  firstName,
-  lastName,
-  email,
-  passwordHash,
-  activationTokenHash,
-) {
+export async function createUser(firstName, lastName, email, passwordHash, activationTokenHash) {
   await sql`
     INSERT INTO auth.users 
       (firstname, lastname, email, password_hash, activation_token_hash, activation_token_hash_expires_at)
@@ -15,7 +9,7 @@ async function createUser(
   `;
 }
 
-async function activateAccount(activationTokenHash) {
+export async function activateAccount(activationTokenHash) {
   const result = await sql`
     UPDATE auth.users
     SET 
@@ -31,7 +25,7 @@ async function activateAccount(activationTokenHash) {
   return result.length > 0;
 }
 
-async function updateVerificationToken(email, activationTokenHash) {
+export async function updateVerificationToken(email, activationTokenHash) {
   const result = await sql`
     UPDATE auth.users
     SET 
@@ -46,7 +40,7 @@ async function updateVerificationToken(email, activationTokenHash) {
   return result.length > 0;
 }
 
-async function getUserByEmail(email) {
+export async function getUserByEmail(email) {
   const [user] = await sql`
     SELECT * FROM auth.users WHERE email = ${email}
   `;
@@ -54,7 +48,7 @@ async function getUserByEmail(email) {
   return user;
 }
 
-async function getUserById(id) {
+export async function getUserById(id) {
   const [user] = await sql`
     SELECT * FROM auth.users WHERE id = ${id}
   `;
@@ -62,7 +56,7 @@ async function getUserById(id) {
   return user;
 }
 
-async function updateUserById(id, user) {
+export async function updateUserById(id, user) {
   if (Object.keys(user).length === 0) return null;
 
   const columns = Object.keys(user);
@@ -77,7 +71,7 @@ async function updateUserById(id, user) {
   return result[0] || null;
 }
 
-async function updateResetPasswordToken(id, resetPasswordTokenHash) {
+export async function updateResetPasswordToken(id, resetPasswordTokenHash) {
   await sql`
     UPDATE auth.users 
     SET 
@@ -87,7 +81,7 @@ async function updateResetPasswordToken(id, resetPasswordTokenHash) {
   `;
 }
 
-async function verifyResetPasswordToken(email, resetPasswordTokenHash) {
+export async function verifyResetPasswordToken(email, resetPasswordTokenHash) {
   const [user] = await sql`
     SELECT * 
     FROM auth.users 
@@ -100,7 +94,7 @@ async function verifyResetPasswordToken(email, resetPasswordTokenHash) {
   return user;
 }
 
-async function resetPassword(email, resetPasswordTokenHash, passwordHash) {
+export async function resetPassword(email, resetPasswordTokenHash, passwordHash) {
   const result = await sql`
     UPDATE auth.users 
     SET 
@@ -117,15 +111,3 @@ async function resetPassword(email, resetPasswordTokenHash, passwordHash) {
 
   return result.length > 0;
 }
-
-export {
-  createUser,
-  activateAccount,
-  updateVerificationToken,
-  updateUserById,
-  getUserByEmail,
-  getUserById,
-  updateResetPasswordToken,
-  verifyResetPasswordToken,
-  resetPassword,
-};

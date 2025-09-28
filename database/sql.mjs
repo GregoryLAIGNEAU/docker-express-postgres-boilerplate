@@ -1,6 +1,5 @@
 import postgres from "postgres";
-import dbOptions from "#config/dbOptions.mjs";
 
-const sql = postgres(dbOptions);
+import { dbOptions } from "#config/dbOptions.mjs";
 
-export default sql;
+export const sql = postgres(dbOptions);

@@ -1,6 +1,6 @@
 import { isProduction } from "#utilities/envUtility.mjs";
 
-const redisConfig = {
+export const redisConfig = {
   password: process.env.REDIS_PASSWORD,
   socket: {
     host: process.env.REDIS_HOST,
@@ -8,5 +8,3 @@ const redisConfig = {
     tls: isProduction,
   },
 };
-
-export default redisConfig;

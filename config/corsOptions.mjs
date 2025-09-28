@@ -1,6 +1,6 @@
 const whitelist = process.env.CORS_ALLOWED_ORIGINS.split(",");
 
-const corsOptions = {
+export const corsOptions = {
   origin: (origin, callback) => {
     if (!origin || whitelist.indexOf(origin) !== -1) {
       callback(null, true);
@@ -12,5 +12,3 @@ const corsOptions = {
   allowedHeaders: ["Authorization", "Content-Type", "Accept"],
   credentials: true,
 };
-
-export default corsOptions;

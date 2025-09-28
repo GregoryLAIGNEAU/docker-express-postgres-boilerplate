@@ -1,4 +1,4 @@
-import transporter from "#config/mailerConfig.mjs";
+import { transporter } from "#config/mailerConfig.mjs";
 
 export const sendActivationEmail = async (email, activationToken) => {
   const activationLink = `${process.env.BASE_URL}/api/v1/register/activate?token=${activationToken}`;

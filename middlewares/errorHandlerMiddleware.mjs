@@ -1,6 +1,6 @@
 import { ApiError } from "#errors/indexError.mjs";
 
-const errorHandlerMiddleware = (err, _req, res, _next) => {
+export const errorHandlerMiddleware = (err, _req, res, _next) => {
   console.log(err);
 
   if (err instanceof ApiError) {
@@ -13,5 +13,3 @@ const errorHandlerMiddleware = (err, _req, res, _next) => {
     message: "Something went wrong, please try again later.",
   });
 };
-
-export default errorHandlerMiddleware;

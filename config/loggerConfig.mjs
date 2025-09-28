@@ -1,7 +1,8 @@
 import { format, transports } from "winston";
+
 const { colorize, combine, errors, json, printf, timestamp } = format;
 
-const loggerConfig = {
+export const loggerConfig = {
   level: process.env.LOG_LEVEL,
   format: combine(errors({ stack: true }), timestamp(), json()),
   transports: [
@@ -10,13 +11,11 @@ const loggerConfig = {
   ],
 };
 
-const developmentTransport = {
+export const developmentTransport = {
   format: combine(
     colorize(),
     printf(({ level, message, timestamp, stack, ...meta }) => {
-      const formattedMeta = Object.keys(meta).length
-        ? JSON.stringify(meta, null, 2)
-        : "";
+      const formattedMeta = Object.keys(meta).length ? JSON.stringify(meta, null, 2) : "";
 
       if (stack) {
         return `${level}: ${stack}`;
@@ -26,5 +25,3 @@ const developmentTransport = {
     }),
   ),
 };
-
-export { loggerConfig, developmentTransport };

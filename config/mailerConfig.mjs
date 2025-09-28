@@ -1,6 +1,6 @@
-import nodemailer from 'nodemailer';
+import nodemailer from "nodemailer";
 
-const transporter = nodemailer.createTransport(
+export const transporter = nodemailer.createTransport(
   {
     host: process.env.SMTP_HOST,
     port: process.env.SMTP_PORT,
@@ -12,5 +12,3 @@ const transporter = nodemailer.createTransport(
   },
   { from: process.env.SMTP_SENDER_EMAIL },
 );
-
-export default transporter;

@@ -1,5 +1,6 @@
 import vine from "@vinejs/vine";
-import sql from "#database/sql.mjs";
+
+import { sql } from "#database/sql.mjs";
 
 async function unique(value, options, field) {
   if (typeof value !== "string") {

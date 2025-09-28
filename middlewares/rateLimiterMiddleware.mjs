@@ -1,5 +1,5 @@
 import { RateLimiterRedis } from "rate-limiter-flexible";
-import redisClient from "#utilities/redisUtility.mjs";
+import { redisClient } from "#utilities/redisUtility.mjs";
 
 const rateLimiter = new RateLimiterRedis({
   storeClient: redisClient,
@@ -9,7 +9,7 @@ const rateLimiter = new RateLimiterRedis({
   disableOfflineQueue: true,
 });
 
-const rateLimiterMiddleware = async (req, res, next) => {
+export const rateLimiterMiddleware = async (req, res, next) => {
   try {
     await rateLimiter.consume(req.ip);
     next();
@@ -27,5 +27,3 @@ const rateLimiterMiddleware = async (req, res, next) => {
     }
   }
 };
-
-export default rateLimiterMiddleware;

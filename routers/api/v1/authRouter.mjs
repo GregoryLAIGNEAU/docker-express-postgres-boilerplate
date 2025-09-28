@@ -1,8 +1,8 @@
 import { Router } from "express";
 import { authController } from "#controllers/index.mjs";
-import jwtAuthMiddleware from "#middlewares/jwtAuthMiddleware.mjs";
+import { jwtAuthMiddleware } from "#middlewares/jwtAuthMiddleware.mjs";
 
-const authRouter = Router();
+export const authRouter = Router();
 
 authRouter.post("/register", authController.postRegister);
 
@@ -19,5 +19,3 @@ authRouter.post("/reset-password/reset", authController.postResetPassword);
 authRouter.post("/refresh-token", authController.postRefreshToken);
 
 authRouter.post("/logout", jwtAuthMiddleware, authController.postLogout);
-
-export default authRouter;

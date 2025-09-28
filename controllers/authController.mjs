@@ -4,14 +4,8 @@ import jwt from "jsonwebtoken";
 import { ACCOUNT_STATUS } from "#constants/accountStatusConstant.mjs";
 import { REFRESH_COOKIE_NAME } from "#constants/cookieConstant.mjs";
 import { BadRequestError, UnauthorizedError } from "#errors/indexError.mjs";
-import {
-  sendActivationEmail,
-  sendResetPasswordEmail,
-} from "#mailer/authMailer.mjs";
-import {
-  getRefreshTokenByHash,
-  revokeRefreshToken,
-} from "#models/refreshTokenModel.mjs";
+import { sendActivationEmail, sendResetPasswordEmail } from "#mailer/authMailer.mjs";
+import { getRefreshTokenByHash, revokeRefreshToken } from "#models/refreshTokenModel.mjs";
 import {
   activateAccount,
   createUser,
@@ -21,10 +15,7 @@ import {
   updateVerificationToken,
   verifyResetPasswordToken,
 } from "#models/userModel.mjs";
-import {
-  clearAuthCookies,
-  issueAuthCookies,
-} from "#services/authService.mjs";
+import { clearAuthCookies, issueAuthCookies } from "#services/authService.mjs";
 import { generateToken, hashToken } from "#utilities/tokenUtility.mjs";
 import {
   forgotPasswordValidator,
@@ -35,21 +26,14 @@ import {
 } from "#validators/authValidator.mjs";
 
 export const postRegister = async (req, res) => {
-  const { firstName, lastName, email, password } =
-    await registerValidator.validate(req.body);
+  const { firstName, lastName, email, password } = await registerValidator.validate(req.body);
 
   const passwordHash = await argon2.hash(password);
 
   const activationToken = generateToken();
   const activationTokenHash = hashToken(activationToken);
 
-  await createUser(
-    firstName,
-    lastName,
-    email,
-    passwordHash,
-    activationTokenHash,
-  );
+  await createUser(firstName, lastName, email, passwordHash, activationTokenHash);
 
   await sendActivationEmail(email, activationToken);
 
@@ -63,9 +47,7 @@ export const getActivateAccount = async (req, res) => {
   const { token } = req.query;
 
   if (!token || typeof token !== "string" || token.length !== 64) {
-    throw new BadRequestError(
-      "This activation link is invalid or has expired. Please request a new one.",
-    );
+    throw new BadRequestError("This activation link is invalid or has expired. Please request a new one.");
   }
 
   const activationTokenHash = hashToken(token);
@@ -73,14 +55,10 @@ export const getActivateAccount = async (req, res) => {
   const user = await activateAccount(activationTokenHash);
 
   if (!user) {
-    throw new BadRequestError(
-      "This activation link is invalid or has expired. Please request a new one.",
-    );
+    throw new BadRequestError("This activation link is invalid or has expired. Please request a new one.");
   }
 
-  return res
-    .status(200)
-    .json({ message: "Your account has been activated successfully." });
+  return res.status(200).json({ message: "Your account has been activated successfully." });
 };
 
 export const postResendVerification = async (req, res) => {
@@ -90,16 +68,13 @@ export const postResendVerification = async (req, res) => {
 
   if (!user) {
     return res.status(200).json({
-      message:
-        "If an account exists with that email, a verification link has been sent.",
+      message: "If an account exists with that email, a verification link has been sent.",
       email: email,
     });
   }
 
   if (user.account_status_id !== ACCOUNT_STATUS.pending_verification) {
-    throw new BadRequestError(
-      "Your account is already activated or cannot be activated.",
-    );
+    throw new BadRequestError("Your account is already activated or cannot be activated.");
   }
 
   const activationToken = generateToken();
@@ -110,8 +85,7 @@ export const postResendVerification = async (req, res) => {
   await sendActivationEmail(user.email, activationToken);
 
   return res.status(200).json({
-    message:
-      "If an account exists with that email, a verification link has been sent.",
+    message: "If an account exists with that email, a verification link has been sent.",
     email: email,
   });
 };
@@ -132,28 +106,20 @@ export const postLogin = async (req, res) => {
   }
 
   if (user.account_status_id === ACCOUNT_STATUS.pending_verification) {
-    throw new BadRequestError(
-      "Your email verification is pending. Please verify your email to continue.",
-    );
+    throw new BadRequestError("Your email verification is pending. Please verify your email to continue.");
   }
 
   if (user.account_status_id === ACCOUNT_STATUS.deactivated) {
-    throw new BadRequestError(
-      "Your account is deactivated. Please contact support for assistance.",
-    );
+    throw new BadRequestError("Your account is deactivated. Please contact support for assistance.");
   }
 
   if (user.account_status_id === ACCOUNT_STATUS.suspended) {
-    throw new BadRequestError(
-      "Your account is suspended. Please contact support for assistance.",
-    );
+    throw new BadRequestError("Your account is suspended. Please contact support for assistance.");
   }
 
   await issueAuthCookies(res, user.id);
 
-  return res
-    .status(200)
-    .json({ message: "You have been logged in successfully" });
+  return res.status(200).json({ message: "You have been logged in successfully" });
 };
 
 export const postForgotPassword = async (req, res) => {
@@ -172,27 +138,21 @@ export const postForgotPassword = async (req, res) => {
   }
 
   res.status(200).json({
-    message:
-      "If an account exists with that email, a password reset link has been sent.",
+    message: "If an account exists with that email, a password reset link has been sent.",
     email: email,
   });
 };
 
 export const postResetPassword = async (req, res) => {
   const { token } = req.query;
-  const { email, password, confirmPassword } =
-    await resetPasswordValidator.validate(req.body);
+  const { email, password, confirmPassword } = await resetPasswordValidator.validate(req.body);
 
   if (!token || typeof token !== "string" || token.length !== 64) {
-    throw new BadRequestError(
-      "This password reset link is invalid or has expired. Please request a new one.",
-    );
+    throw new BadRequestError("This password reset link is invalid or has expired. Please request a new one.");
   }
 
   if (password !== confirmPassword) {
-    throw new BadRequestError(
-      "Your passwords don't match. Please double-check and try again.",
-    );
+    throw new BadRequestError("Your passwords don't match. Please double-check and try again.");
   }
 
   const resetPasswordTokenHash = hashToken(token);

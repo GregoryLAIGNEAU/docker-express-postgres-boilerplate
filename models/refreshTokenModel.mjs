@@ -1,4 +1,4 @@
-import sql from "#database/sql.mjs";
+import { sql } from "#database/sql.mjs";
 
 export async function upsertRefreshToken(userId, tokenHash, expiresAt) {
   await sql`

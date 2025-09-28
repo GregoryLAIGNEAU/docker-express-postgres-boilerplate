@@ -1,4 +1,5 @@
 import vine from "@vinejs/vine";
+
 import { uniqueRule } from "./rules/unique.mjs";
 import { emailSchema, nameSchema, passwordSchema } from "./shared/index.mjs";
 
@@ -6,9 +7,7 @@ export const registerValidator = vine.compile(
   vine.object({
     firstName: nameSchema.clone(),
     lastName: nameSchema.clone(),
-    email: emailSchema
-      .clone()
-      .use(uniqueRule({ table: "auth.users", column: "email" })),
+    email: emailSchema.clone().use(uniqueRule({ table: "auth.users", column: "email" })),
     password: passwordSchema.clone(),
   }),
 );

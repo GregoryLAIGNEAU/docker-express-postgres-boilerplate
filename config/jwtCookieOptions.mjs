@@ -5,7 +5,7 @@ export const accessCookieOptions = {
   secure: isProduction,
   sameSite: "Strict",
   path: "/",
-  maxAge: 15 * 60 * 1000
+  maxAge: 15 * 60 * 1000,
 };
 
 export const refreshCookieOptions = {
@@ -13,5 +13,5 @@ export const refreshCookieOptions = {
   secure: isProduction,
   sameSite: "Strict",
   path: "/",
-  maxAge: 14 * 24 * 60 * 60 * 1000
+  maxAge: 14 * 24 * 60 * 60 * 1000,
 };

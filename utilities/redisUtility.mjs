@@ -1,9 +1,9 @@
 import { createClient } from "redis";
 
-import redisConfig from "#config/redisConfig.mjs";
-import logger from "./loggerUtility.mjs";
+import { redisConfig } from "#config/redisConfig.mjs";
+import { logger } from "./loggerUtility.mjs";
 
-const redisClient = createClient(redisConfig);
+export const redisClient = createClient(redisConfig);
 
 redisClient.on("connect", () => logger.info("Connecting to Redis server..."));
 redisClient.on("ready", () => logger.info("Redis client is ready to use"));
@@ -18,5 +18,3 @@ try {
 } catch (error) {
   logger.error("Failed to connect to Redis server", error);
 }
-
-export default redisClient;

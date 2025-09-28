@@ -1,7 +1,7 @@
 import { isProduction } from "#utilities/envUtility.mjs";
-import logger from "#utilities/loggerUtility.mjs";
+import { logger } from "#utilities/loggerUtility.mjs";
 
-const format = isProduction
+export const format = isProduction
   ? (tokens, req, res) => {
       return JSON.stringify({
         message: "incoming-request",
@@ -16,7 +16,7 @@ const format = isProduction
     }
   : "dev";
 
-const stream = {
+export const stream = {
   write: (message) => {
     if (isProduction) {
       const data = JSON.parse(message);
@@ -28,6 +28,4 @@ const stream = {
   },
 };
 
-const skip = isProduction ? (_req, res) => res.statusCode < 400 : () => false;
-
-export { format, stream, skip };
+export const skip = isProduction ? (_req, res) => res.statusCode < 400 : () => false;

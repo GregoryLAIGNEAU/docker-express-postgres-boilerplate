@@ -1,4 +1,5 @@
 import vine from "@vinejs/vine";
+
 import { uniqueRule } from "./rules/unique.mjs";
 import { emailSchema, nameSchema } from "./shared/index.mjs";
 
