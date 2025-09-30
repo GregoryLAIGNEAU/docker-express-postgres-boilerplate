@@ -1,8 +1,8 @@
 import { createHash, randomBytes, randomUUID } from "node:crypto";
 import jwt from "jsonwebtoken";
 
-export function generateJwtToken(userId, secret, expiresIn) {
-  const payload = { sub: userId, sid: randomUUID() };
+export function generateJwtToken(userId, roleId, secret, expiresIn) {
+  const payload = { sub: userId, sid: randomUUID(), role_id: roleId, };
 
   return jwt.sign(payload, secret, { expiresIn });
 }
