@@ -117,7 +117,7 @@ export const postLogin = async (req, res) => {
     throw new BadRequestError("Your account is suspended. Please contact support for assistance.");
   }
 
-  await issueAuthCookies(res, user.id);
+  await issueAuthCookies(res, user.id, user.role_id);
 
   return res.status(200).json({ message: "You have been logged in successfully" });
 };
@@ -190,7 +190,7 @@ export const postRefreshToken = async (req, res) => {
     throw new UnauthorizedError("Invalid refresh token");
   }
 
-  await issueAuthCookies(res, decoded.sub);
+  await issueAuthCookies(res, decoded.sub, decoded.role_id);
 
   return res.status(200).json({ message: "Tokens refreshed successfully" });
 };
