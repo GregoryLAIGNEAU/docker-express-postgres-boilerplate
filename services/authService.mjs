@@ -7,9 +7,10 @@ import {
 } from "#utilities/cookieUtility.mjs";
 import { generateJwtToken, hashToken } from "#utilities/tokenUtility.mjs";
 
-export async function issueAuthCookies(res, userId) {
+export async function issueAuthCookies(res, userId, roleId) {
   const accessToken = generateJwtToken(
     userId,
+    roleId,
     process.env.ACCESS_TOKEN_SECRET,
     process.env.ACCESS_TOKEN_EXPIRY,
   );
@@ -18,6 +19,7 @@ export async function issueAuthCookies(res, userId) {
 
   const refreshToken = generateJwtToken(
     userId,
+    roleId,
     process.env.REFRESH_TOKEN_SECRET,
     process.env.REFRESH_TOKEN_EXPIRY,
   );
