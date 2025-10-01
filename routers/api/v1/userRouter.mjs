@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { userController } from "#controllers/index.mjs";
-import { jwtAuthMiddleware } from "#middlewares/jwtAuthMiddleware.mjs";
+import { jwtAuthMiddleware } from "#middlewares/authMiddleware.mjs";
 
 export const userRouter = Router();
 
