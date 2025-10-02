@@ -22,11 +22,7 @@ const app = express();
 
 isProduction ? app.set("trust proxy", 1) : app.set("trust proxy", false);
 
-app.use(
-  helmet({
-    xPoweredBy: false,
-  }),
-);
+app.use(helmet({ xPoweredBy: false }));
 app.disable("x-powered-by");
 
 app.use(cors(corsOptions));
@@ -38,7 +34,7 @@ app.use(rateLimiterMiddleware);
 
 passport.use(jwtStrategy);
 
-app.use("/api/v1", authRouter);
+app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/csrf-token", csrfRouter);
 app.use(doubleCsrfProtection);
 
