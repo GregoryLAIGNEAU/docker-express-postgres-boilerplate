@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { authController } from "#controllers/index.mjs";
-import { jwtAuthMiddleware } from "#middlewares/authMiddleware.mjs";
 
+import { authController } from "#controllers/index.mjs";
 import { isGuest } from "#middlewares/authMiddleware.mjs";
+import { jwtAuthMiddleware } from "#middlewares/authMiddleware.mjs";
 
 export const authRouter = Router();
 
