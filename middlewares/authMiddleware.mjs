@@ -1,9 +1,9 @@
 import jwt from "jsonwebtoken";
 import passport from "passport";
 
+import { ACCESS_COOKIE_NAME } from "#constants/cookieConstant.mjs";
 import { ForbiddenError } from "#errors/ForbiddenError.mjs";
 import { UnauthorizedError } from "#errors/UnauthorizedError.mjs";
-import { ACCESS_COOKIE_NAME } from "#constants/cookieConstant.mjs";
 
 export const authenticateJwt = passport.authenticate("jwt", { session: false });
 
