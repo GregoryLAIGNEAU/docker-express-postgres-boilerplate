@@ -2,7 +2,7 @@ import morgan from "morgan";
 
 import { format, skip, stream } from "#config/morganConfig.mjs";
 
-export const morganMiddleware = morgan(format, {
+export const httpLogger = morgan(format, {
   stream,
   skip,
 });

@@ -1,7 +1,7 @@
 import { RateLimiterRedis } from "rate-limiter-flexible";
 import { redisClient } from "#utilities/redisUtility.mjs";
 
-const rateLimiter = new RateLimiterRedis({
+const rateLimiterRedis = new RateLimiterRedis({
   storeClient: redisClient,
   points: 10,
   duration: 60,
@@ -9,9 +9,9 @@ const rateLimiter = new RateLimiterRedis({
   disableOfflineQueue: true,
 });
 
-export const rateLimiterMiddleware = async (req, res, next) => {
+export const rateLimiter = async (req, res, next) => {
   try {
-    await rateLimiter.consume(req.ip);
+    await rateLimiterRedis.consume(req.ip);
     next();
   } catch (error) {
     if (error.remainingPoints === 0 && error.msBeforeNext) {
