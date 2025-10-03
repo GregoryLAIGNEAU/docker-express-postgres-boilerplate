@@ -1,12 +1,11 @@
 import { RateLimiterRedis } from "rate-limiter-flexible";
+
+import { rateLimiterConfig } from "#config/rateLimiterConfig.mjs";
 import { redisClient } from "#utilities/redisUtility.mjs";
 
 const rateLimiterRedis = new RateLimiterRedis({
   storeClient: redisClient,
-  points: 10,
-  duration: 60,
-  useRedisPackage: true,
-  disableOfflineQueue: true,
+  ...rateLimiterConfig,
 });
 
 export const rateLimiter = async (req, res, next) => {
