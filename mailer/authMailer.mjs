@@ -1,7 +1,8 @@
+import { BASE_URL } from "#config/envConfig.mjs";
 import { transporter } from "#config/mailerConfig.mjs";
 
 export const sendActivationEmail = async (email, activationToken) => {
-  const activationLink = `${process.env.BASE_URL}/api/v1/register/activate?token=${activationToken}`;
+  const activationLink = `${BASE_URL}/api/v1/auth/register/activate?token=${activationToken}`;
 
   const mailOptions = {
     to: email,
@@ -30,7 +31,7 @@ export const sendActivationEmail = async (email, activationToken) => {
 };
 
 export const sendResetPasswordEmail = async (email, resetPasswordToken) => {
-  const resetPasswordLink = `${process.env.BASE_URL}/api/v1/reset-password/reset?token=${resetPasswordToken}`;
+  const resetPasswordLink = `${BASE_URL}/api/v1/auth/reset-password/reset?token=${resetPasswordToken}`;
 
   const mailOptions = {
     to: email,
