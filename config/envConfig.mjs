@@ -34,3 +34,5 @@ export const SMTP_USERNAME = requireEnvVar("SMTP_USERNAME");
 export const SMTP_PASSWORD = requireEnvVar("SMTP_PASSWORD");
 export const SMTP_SENDER_EMAIL = requireEnvVar("SMTP_SENDER_EMAIL");
 export const SMTP_SECURE = SMTP_PORT === 465;
+
+export const LOG_LEVEL = process.env.LOG_LEVEL || (isProduction ? "http" : "debug");
