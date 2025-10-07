@@ -7,7 +7,7 @@ import {
 } from "#config/tokenConfig.mjs";
 import { upsertRefreshToken } from "#models/refreshTokenModel.mjs";
 import { clearAccessCookie, clearRefreshCookie, setAccessCookie, setRefreshCookie } from "#utilities/cookieUtility.mjs";
-import { generateExpiry, generateJwtToken, hashToken } from "#utilities/tokenUtility.mjs";
+import { generateJwtToken, getExpiryDate, hashToken } from "#utilities/tokenUtility.mjs";
 
 export async function issueAuthCookies(res, userId, roleId) {
   const accessToken = generateJwtToken(userId, roleId, ACCESS_TOKEN_SECRET, ACCESS_TOKEN_EXPIRES_IN);
@@ -16,7 +16,7 @@ export async function issueAuthCookies(res, userId, roleId) {
 
   const refreshToken = generateJwtToken(userId, roleId, REFRESH_TOKEN_SECRET, REFRESH_TOKEN_EXPIRES_IN);
   const tokenHash = hashToken(refreshToken);
-  const expiresAt = generateExpiry(REFRESH_TOKEN_LIFETIME_MS);
+  const expiresAt = getExpiryDate(REFRESH_TOKEN_LIFETIME_MS);
 
   await upsertRefreshToken(userId, tokenHash, expiresAt);
 

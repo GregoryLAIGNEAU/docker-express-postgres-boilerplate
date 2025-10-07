@@ -1,11 +1,15 @@
+import { ACTIVATION_TOKEN_EXPIRY_MS, RESET_PASSWORD_TOKEN_EXPIRY_MS } from "#config/tokenConfig.mjs";
 import { sql } from "#database/sql.mjs";
+import { getExpiryDate } from "#utilities/tokenUtility.mjs";
 
 export async function createUser(firstName, lastName, email, passwordHash, activationTokenHash) {
+  const activationTokenHashExpiresAt = getExpiryDate(ACTIVATION_TOKEN_EXPIRY_MS);
+
   await sql`
     INSERT INTO auth.users 
       (firstname, lastname, email, password_hash, activation_token_hash, activation_token_hash_expires_at)
     VALUES 
-      (${firstName}, ${lastName}, ${email}, ${passwordHash}, ${activationTokenHash}, NOW() + interval '15 minutes')
+      (${firstName}, ${lastName}, ${email}, ${passwordHash}, ${activationTokenHash}, ${activationTokenHashExpiresAt})
   `;
 }
 
@@ -26,11 +30,13 @@ export async function activateAccount(activationTokenHash) {
 }
 
 export async function updateVerificationToken(email, activationTokenHash) {
+  const activationTokenHashExpiresAt = getExpiryDate(ACTIVATION_TOKEN_EXPIRY_MS);
+
   const result = await sql`
     UPDATE auth.users
     SET 
       activation_token_hash = ${activationTokenHash},
-      activation_token_hash_expires_at = NOW() + INTERVAL '15 minutes'
+      activation_token_hash_expires_at = ${activationTokenHashExpiresAt}
     WHERE 
       email = ${email} 
       AND account_status_id = 1
@@ -62,9 +68,9 @@ export async function updateUserById(id, user) {
   const columns = Object.keys(user);
 
   const result = await sql`
-    update auth.users
-    set ${sql(user, columns)}, updated_at = NOW()
-    where id = ${id}
+    UPDATE auth.users
+    SET ${sql(user, columns)}, updated_at = NOW()
+    WHERE id = ${id}
     returning *
   `;
 
@@ -72,13 +78,18 @@ export async function updateUserById(id, user) {
 }
 
 export async function updateResetPasswordToken(id, resetPasswordTokenHash) {
-  await sql`
+  const resetPasswordHashExpiresAt = getExpiryDate(RESET_PASSWORD_TOKEN_EXPIRY_MS);
+
+  const result = await sql`
     UPDATE auth.users 
     SET 
       reset_password_token_hash = ${resetPasswordTokenHash}, 
-      reset_password_token_hash_expires_at = NOW() + interval '15 minutes' 
+      reset_password_token_hash_expires_at = ${resetPasswordHashExpiresAt}
     WHERE id = ${id}
+    RETURNING *;
   `;
+
+  return result[0] || null;
 }
 
 export async function verifyResetPasswordToken(email, resetPasswordTokenHash) {
