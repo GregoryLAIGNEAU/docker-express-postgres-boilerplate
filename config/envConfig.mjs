@@ -12,3 +12,10 @@ export const RESET_PASSWORD_TOKEN_EXPIRY_MINUTES = parseInt(
   process.env.RESET_PASSWORD_TOKEN_EXPIRY_MINUTES || "10",
   10,
 );
+
+export const PG_HOST = requireEnvVar("PG_HOST");
+export const PG_PORT = parseInt(process.env.PG_PORT || "5432", 10);
+export const PG_NAME = requireEnvVar("PG_NAME");
+export const PG_USERNAME = requireEnvVar("PG_USERNAME");
+export const PG_PASSWORD = requireEnvVar("PG_PASSWORD");
+export const PG_SSL = process.env.PG_SSL === "true";
