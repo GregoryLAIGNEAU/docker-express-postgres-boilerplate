@@ -1,35 +1,22 @@
-import { upsertRefreshToken } from "#models/refreshTokenModel.mjs";
 import {
-  clearAccessCookie,
-  clearRefreshCookie,
-  setAccessCookie,
-  setRefreshCookie,
-} from "#utilities/cookieUtility.mjs";
-import { generateJwtToken, hashToken } from "#utilities/tokenUtility.mjs";
+  ACCESS_TOKEN_EXPIRES_IN,
+  ACCESS_TOKEN_SECRET,
+  REFRESH_TOKEN_EXPIRES_IN,
+  REFRESH_TOKEN_LIFETIME_MS,
+  REFRESH_TOKEN_SECRET,
+} from "#config/tokenConfig.mjs";
+import { upsertRefreshToken } from "#models/refreshTokenModel.mjs";
+import { clearAccessCookie, clearRefreshCookie, setAccessCookie, setRefreshCookie } from "#utilities/cookieUtility.mjs";
+import { generateExpiry, generateJwtToken, hashToken } from "#utilities/tokenUtility.mjs";
 
 export async function issueAuthCookies(res, userId, roleId) {
-  const accessToken = generateJwtToken(
-    userId,
-    roleId,
-    process.env.ACCESS_TOKEN_SECRET,
-    process.env.ACCESS_TOKEN_EXPIRY,
-  );
+  const accessToken = generateJwtToken(userId, roleId, ACCESS_TOKEN_SECRET, ACCESS_TOKEN_EXPIRES_IN);
 
   setAccessCookie(res, accessToken);
 
-  const refreshToken = generateJwtToken(
-    userId,
-    roleId,
-    process.env.REFRESH_TOKEN_SECRET,
-    process.env.REFRESH_TOKEN_EXPIRY,
-  );
-
+  const refreshToken = generateJwtToken(userId, roleId, REFRESH_TOKEN_SECRET, REFRESH_TOKEN_EXPIRES_IN);
   const tokenHash = hashToken(refreshToken);
-
-  const expiresAt = new Date(
-    Date.now() +
-      parseInt(process.env.REFRESH_TOKEN_EXPIRY_DAYS, 10) * 24 * 60 * 60 * 1000,
-  );
+  const expiresAt = generateExpiry(REFRESH_TOKEN_LIFETIME_MS);
 
   await upsertRefreshToken(userId, tokenHash, expiresAt);
 

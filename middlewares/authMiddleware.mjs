@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import passport from "passport";
 
+import { ACCESS_TOKEN_SECRET } from "#config/tokenConfig.mjs";
 import { ACCESS_COOKIE_NAME } from "#constants/cookieConstant.mjs";
 import { ForbiddenError } from "#errors/ForbiddenError.mjs";
 import { UnauthorizedError } from "#errors/UnauthorizedError.mjs";
@@ -25,7 +26,7 @@ export const isGuest = (req, res, next) => {
   const accessToken = req.cookies?.[ACCESS_COOKIE_NAME];
 
   if (accessToken) {
-    jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
+    jwt.verify(accessToken, ACCESS_TOKEN_SECRET);
     return res.status(409).json({ message: "You are already logged in" });
   }
 

@@ -1,3 +1,4 @@
+import { ACCESS_TOKEN_MAX_AGE, REFRESH_TOKEN_MAX_AGE } from "#config/tokenConfig.mjs";
 import { isProduction } from "#utilities/envUtility.mjs";
 
 export const accessCookieOptions = {
@@ -5,7 +6,7 @@ export const accessCookieOptions = {
   secure: isProduction,
   sameSite: "Strict",
   path: "/",
-  maxAge: 15 * 60 * 1000,
+  maxAge: ACCESS_TOKEN_MAX_AGE,
 };
 
 export const refreshCookieOptions = {
@@ -13,5 +14,5 @@ export const refreshCookieOptions = {
   secure: isProduction,
   sameSite: "Strict",
   path: "/",
-  maxAge: 14 * 24 * 60 * 60 * 1000,
+  maxAge: REFRESH_TOKEN_MAX_AGE,
 };

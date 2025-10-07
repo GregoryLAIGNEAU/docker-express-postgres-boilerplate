@@ -1,5 +1,6 @@
 import { ExtractJwt } from "passport-jwt";
 
+import { ACCESS_TOKEN_SECRET } from "#config/tokenConfig.mjs";
 import { ACCESS_COOKIE_NAME } from "#constants/cookieConstant.mjs";
 
 const cookieExtractor = (req) => {
@@ -14,5 +15,5 @@ const cookieExtractor = (req) => {
 
 export const jwtOptions = {
   jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor, ExtractJwt.fromAuthHeaderAsBearerToken()]),
-  secretOrKey: process.env.ACCESS_TOKEN_SECRET,
+  secretOrKey: ACCESS_TOKEN_SECRET,
 };
