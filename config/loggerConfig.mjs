@@ -1,9 +1,11 @@
 import { format, transports } from "winston";
 
+import { LOG_LEVEL } from "./envConfig.mjs";
+
 const { colorize, combine, errors, json, printf, timestamp } = format;
 
 export const loggerConfig = {
-  level: process.env.LOG_LEVEL,
+  level: LOG_LEVEL,
   format: combine(errors({ stack: true }), timestamp(), json()),
   transports: [
     new transports.File({ filename: "logs/error.log", level: "error" }),
