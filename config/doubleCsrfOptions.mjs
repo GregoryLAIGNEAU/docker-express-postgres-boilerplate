@@ -1,9 +1,8 @@
 import jwt from "jsonwebtoken";
 
 import { ACCESS_COOKIE_NAME, X_CSRF_TOKEN_COOKIE_NAME } from "#constants/cookieConstant.mjs";
-import { isProduction } from "#utilities/envUtility.mjs";
-import { CSRF_SECRET } from "./envConfig.mjs";
-import { ACCESS_TOKEN_SECRET } from "./tokenConfig.mjs";
+import { COOKIE_SECURE } from "./envConfig.mjs";
+import { ACCESS_TOKEN_SECRET, CSRF_SECRET } from "./tokenConfig.mjs";
 
 export const doubleCsrfOptions = {
   getSecret: () => CSRF_SECRET,
@@ -15,7 +14,7 @@ export const doubleCsrfOptions = {
   },
   cookieName: X_CSRF_TOKEN_COOKIE_NAME,
   cookieOptions: {
-    secure: isProduction,
+    secure: COOKIE_SECURE,
   },
   getTokenFromRequest: (req) => {
     if (req.is("application/x-www-form-urlencoded")) {
