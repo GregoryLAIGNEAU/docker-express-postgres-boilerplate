@@ -1,10 +1,10 @@
-import { isProduction } from "#utilities/envUtility.mjs";
+import { REDIS_HOST, REDIS_PASSWORD, REDIS_PORT, REDIS_TLS } from "./envConfig.mjs";
 
 export const redisConfig = {
-  password: process.env.REDIS_PASSWORD,
+  password: REDIS_PASSWORD,
   socket: {
-    host: process.env.REDIS_HOST,
-    port: Number(process.env.REDIS_PORT),
-    tls: isProduction,
+    host: REDIS_HOST,
+    port: REDIS_PORT,
+    tls: REDIS_TLS,
   },
 };
