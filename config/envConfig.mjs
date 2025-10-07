@@ -27,3 +27,10 @@ export const REDIS_PORT = parseInt(process.env.REDIS_PORT || "6379", 10);
 export const REDIS_TLS = isProduction;
 
 export const COOKIE_SECURE = isProduction;
+
+export const SMTP_HOST = requireEnvVar("SMTP_HOST");
+export const SMTP_PORT = parseInt(process.env.SMTP_PORT || "587", 10);
+export const SMTP_USERNAME = requireEnvVar("SMTP_USERNAME");
+export const SMTP_PASSWORD = requireEnvVar("SMTP_PASSWORD");
+export const SMTP_SENDER_EMAIL = requireEnvVar("SMTP_SENDER_EMAIL");
+export const SMTP_SECURE = SMTP_PORT === 465;
