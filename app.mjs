@@ -5,6 +5,7 @@ import helmet from "helmet";
 import passport from "passport";
 
 import { corsOptions } from "#config/corsOptions.mjs";
+import { APP_CONFIG } from "#config/envConfig.mjs";
 import { csrfErrorHandler } from "#middlewares/csrfErrorHandlerMiddleware.mjs";
 import { doubleCsrfProtection } from "#middlewares/csrfMiddleware.mjs";
 import { errorHandler } from "#middlewares/errorHandlerMiddleware.mjs";
@@ -43,8 +44,6 @@ app.use(notFound);
 app.use(csrfErrorHandler);
 app.use(errorHandler);
 
-const PORT = Number(process.env.PORT) || 5000;
-
-app.listen(PORT, () => {
-  logger.info(`Server is running on http://localhost:${PORT}`);
+app.listen(APP_CONFIG.PORT, () => {
+  logger.info(`Server is running on http://localhost:${APP_CONFIG.PORT}`);
 });

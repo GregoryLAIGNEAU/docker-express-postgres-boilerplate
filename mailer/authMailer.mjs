@@ -1,8 +1,9 @@
-import { BASE_URL } from "#config/envConfig.mjs";
+import { APP_CONFIG } from "#config/envConfig.mjs";
 import { transporter } from "#config/mailerConfig.mjs";
+import { TOKEN_CONFIG } from "#config/tokenConfig.mjs";
 
 export const sendActivationEmail = async (email, activationToken) => {
-  const activationLink = `${BASE_URL}/api/v1/auth/register/activate?token=${activationToken}`;
+  const activationLink = `${APP_CONFIG.BASE_URL}/api/v1/auth/register/activate?token=${activationToken}`;
 
   const mailOptions = {
     to: email,
@@ -31,7 +32,7 @@ export const sendActivationEmail = async (email, activationToken) => {
 };
 
 export const sendResetPasswordEmail = async (email, resetPasswordToken) => {
-  const resetPasswordLink = `${BASE_URL}/api/v1/auth/reset-password/reset?token=${resetPasswordToken}`;
+  const resetPasswordLink = `${APP_CONFIG.BASE_URL}/api/v1/auth/reset-password/reset?token=${resetPasswordToken}`;
 
   const mailOptions = {
     to: email,
@@ -45,7 +46,7 @@ export const sendResetPasswordEmail = async (email, resetPasswordToken) => {
 
       If you did not request a password reset, you can safely ignore this email.
 
-      Note: This link will expire in 15 minutes.
+      Note: This link will expire in ${TOKEN_CONFIG.RESET_PASSWORD_TOKEN_EXPIRY_MINUTES} minutes.
 
       Thank you
     `,
@@ -54,7 +55,7 @@ export const sendResetPasswordEmail = async (email, resetPasswordToken) => {
       <p>You recently requested to reset your password. Click the button below to reset it:</p>
       <p><a href="${resetPasswordLink}" rel="noreferrer">Reset Password</a></p>
       <p>If you did not request a password reset, you can safely ignore this email.</p>
-      <p>Note: This link will expire in 15 minutes.</p>
+      <p>Note: This link will expire in ${TOKEN_CONFIG.RESET_PASSWORD_TOKEN_EXPIRY_MINUTES} minutes.</p>
       <p>Thank you,</p>
     `,
   };

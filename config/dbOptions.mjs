@@ -1,10 +1,10 @@
-import { PG_HOST, PG_NAME, PG_PASSWORD, PG_PORT, PG_SSL, PG_USERNAME } from "./envConfig.mjs";
+import { DB_CONFIG } from "./envConfig.mjs";
 
 export const dbOptions = {
-  host: PG_HOST,
-  port: PG_PORT,
-  database: PG_NAME,
-  username: PG_USERNAME,
-  password: PG_PASSWORD,
-  ssl: PG_SSL,
+  host: DB_CONFIG.PG_HOST,
+  port: DB_CONFIG.PG_PORT,
+  database: DB_CONFIG.PG_NAME,
+  username: DB_CONFIG.PG_USERNAME,
+  password: DB_CONFIG.PG_PASSWORD,
+  ssl: DB_CONFIG.PG_SSL,
 };

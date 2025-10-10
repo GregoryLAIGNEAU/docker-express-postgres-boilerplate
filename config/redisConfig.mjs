@@ -1,10 +1,10 @@
-import { REDIS_HOST, REDIS_PASSWORD, REDIS_PORT, REDIS_TLS } from "./envConfig.mjs";
+import { REDIS_CONFIG } from "./envConfig.mjs";
 
 export const redisConfig = {
-  password: REDIS_PASSWORD,
+  password: REDIS_CONFIG.REDIS_PASSWORD,
   socket: {
-    host: REDIS_HOST,
-    port: REDIS_PORT,
-    tls: REDIS_TLS,
+    host: REDIS_CONFIG.REDIS_HOST,
+    port: REDIS_CONFIG.REDIS_PORT,
+    tls: REDIS_CONFIG.REDIS_TLS,
   },
 };

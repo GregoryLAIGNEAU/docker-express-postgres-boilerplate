@@ -1,7 +1,7 @@
 import * as argon2 from "argon2";
 import jwt from "jsonwebtoken";
 
-import { REFRESH_TOKEN_SECRET } from "#config/tokenConfig.mjs";
+import { TOKEN_CONFIG } from "#config/tokenConfig.mjs";
 import { ACCOUNT_STATUS } from "#constants/accountStatusConstant.mjs";
 import { REFRESH_COOKIE_NAME } from "#constants/cookieConstant.mjs";
 import { BadRequestError, UnauthorizedError } from "#errors/indexError.mjs";
@@ -182,7 +182,7 @@ export const postRefreshToken = async (req, res) => {
     throw new UnauthorizedError("Invalid refresh token");
   }
 
-  const decoded = jwt.verify(refreshToken, REFRESH_TOKEN_SECRET);
+  const decoded = jwt.verify(refreshToken, TOKEN_CONFIG.REFRESH_TOKEN_SECRET);
   const tokenHash = hashToken(refreshToken);
 
   const validRefreshToken = await getRefreshTokenByHash(tokenHash);

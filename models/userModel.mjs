@@ -1,9 +1,9 @@
-import { ACTIVATION_TOKEN_EXPIRY_MS, RESET_PASSWORD_TOKEN_EXPIRY_MS } from "#config/tokenConfig.mjs";
+import { TOKEN_CONFIG } from "#config/tokenConfig.mjs";
 import { sql } from "#database/sql.mjs";
 import { getExpiryDate } from "#utilities/tokenUtility.mjs";
 
 export async function createUser(firstName, lastName, email, passwordHash, activationTokenHash) {
-  const activationTokenHashExpiresAt = getExpiryDate(ACTIVATION_TOKEN_EXPIRY_MS);
+  const activationTokenHashExpiresAt = getExpiryDate(TOKEN_CONFIG.ACTIVATION_TOKEN_EXPIRY_MS);
 
   await sql`
     INSERT INTO auth.users 
@@ -30,7 +30,7 @@ export async function activateAccount(activationTokenHash) {
 }
 
 export async function updateVerificationToken(email, activationTokenHash) {
-  const activationTokenHashExpiresAt = getExpiryDate(ACTIVATION_TOKEN_EXPIRY_MS);
+  const activationTokenHashExpiresAt = getExpiryDate(TOKEN_CONFIG.ACTIVATION_TOKEN_EXPIRY_MS);
 
   const result = await sql`
     UPDATE auth.users
@@ -78,7 +78,7 @@ export async function updateUserById(id, user) {
 }
 
 export async function updateResetPasswordToken(id, resetPasswordTokenHash) {
-  const resetPasswordHashExpiresAt = getExpiryDate(RESET_PASSWORD_TOKEN_EXPIRY_MS);
+  const resetPasswordHashExpiresAt = getExpiryDate(TOKEN_CONFIG.RESET_PASSWORD_TOKEN_EXPIRY_MS);
 
   const result = await sql`
     UPDATE auth.users 
