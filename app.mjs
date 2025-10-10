@@ -4,7 +4,7 @@ import express from "express";
 import helmet from "helmet";
 import passport from "passport";
 
-import { corsOptions } from "#config/corsOptions.mjs";
+import { corsOptions } from "#config/corsConfig.mjs";
 import { APP_CONFIG } from "#config/envConfig.mjs";
 import { csrfErrorHandler } from "#middlewares/csrfErrorHandlerMiddleware.mjs";
 import { doubleCsrfProtection } from "#middlewares/csrfMiddleware.mjs";
