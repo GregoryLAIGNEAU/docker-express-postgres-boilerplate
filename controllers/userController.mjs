@@ -1,6 +1,7 @@
 import { ACCOUNT_STATUS } from "#constants/accountStatusConstant.mjs";
 import { NotFoundError } from "#errors/indexError.mjs";
 import { getUserById, updateUserById } from "#models/userModel.mjs";
+import { clearAuthCookies } from "#services/authService.mjs";
 import { updateUserValidator } from "#validators/userValidator.mjs";
 
 export const getUser = async (req, res) => {
@@ -42,6 +43,8 @@ export const deleteUser = async (req, res) => {
   if (!updatedUser) {
     throw new NotFoundError("User not found");
   }
+
+  clearAuthCookies(res);
 
   return res.status(200).json({
     message: "Your account has been deactivated successfully",
