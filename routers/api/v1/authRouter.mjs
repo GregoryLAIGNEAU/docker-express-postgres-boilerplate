@@ -7,15 +7,15 @@ export const authRouter = Router();
 
 authRouter.post("/register", isGuest, authController.postRegister);
 
-authRouter.get("/register/activate", authController.getActivateAccount);
+authRouter.get("/register/activate", isGuest, authController.getActivateAccount);
 
 authRouter.post("/register/resend-verification", isGuest, authController.postResendVerification);
 
 authRouter.post("/login", isGuest, authController.postLogin);
 
-authRouter.post("/forgot-password", authController.postForgotPassword);
+authRouter.post("/forgot-password", isGuest, authController.postForgotPassword);
 
-authRouter.post("/reset-password/reset", authController.postResetPassword);
+authRouter.post("/reset-password/reset", isGuest, authController.postResetPassword);
 
 authRouter.post("/refresh-token", authController.postRefreshToken);
 
