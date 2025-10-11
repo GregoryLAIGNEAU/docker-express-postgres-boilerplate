@@ -1,7 +1,7 @@
 import { TOKEN_CONFIG } from "#config/tokenConfig.mjs";
 import { SECURITY_ENV } from "./envConfig.mjs";
 
-export const accessCookieOptions = {
+export const accessCookieConfig = {
   httpOnly: true,
   secure: SECURITY_ENV.COOKIE_SECURE,
   sameSite: "Strict",
@@ -9,7 +9,7 @@ export const accessCookieOptions = {
   maxAge: TOKEN_CONFIG.ACCESS_TOKEN_MAX_AGE,
 };
 
-export const refreshCookieOptions = {
+export const refreshCookieConfig = {
   httpOnly: true,
   secure: SECURITY_ENV.COOKIE_SECURE,
   sameSite: "Strict",

@@ -1,6 +1,6 @@
 import { DB_CONFIG } from "./envConfig.mjs";
 
-export const dbOptions = {
+export const dbConfig = {
   host: DB_CONFIG.PG_HOST,
   port: DB_CONFIG.PG_PORT,
   database: DB_CONFIG.PG_NAME,

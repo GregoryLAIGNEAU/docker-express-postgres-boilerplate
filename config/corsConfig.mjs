@@ -1,6 +1,6 @@
 import { CORS_CONFIG } from "./envConfig.mjs";
 
-export const corsOptions = {
+export const corsConfig = {
   origin: (origin, callback) => {
     if (!origin || CORS_CONFIG.ALLOWED_ORIGINS.includes(origin)) {
       callback(null, true);

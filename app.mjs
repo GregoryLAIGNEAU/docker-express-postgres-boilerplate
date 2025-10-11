@@ -4,7 +4,7 @@ import express from "express";
 import helmet from "helmet";
 import passport from "passport";
 
-import { corsOptions } from "#config/corsConfig.mjs";
+import { corsConfig } from "#config/corsConfig.mjs";
 import { APP_CONFIG } from "#config/envConfig.mjs";
 import { csrfErrorHandler } from "#middlewares/csrfErrorHandlerMiddleware.mjs";
 import { doubleCsrfProtection } from "#middlewares/csrfMiddleware.mjs";
@@ -26,7 +26,7 @@ isProduction ? app.set("trust proxy", 1) : app.set("trust proxy", false);
 app.use(helmet({ xPoweredBy: false }));
 app.disable("x-powered-by");
 
-app.use(cors(corsOptions));
+app.use(cors(corsConfig));
 app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 app.use(cookieParser());

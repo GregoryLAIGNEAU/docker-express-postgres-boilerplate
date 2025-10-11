@@ -4,7 +4,7 @@ import { ACCESS_COOKIE_NAME, X_CSRF_TOKEN_COOKIE_NAME } from "#constants/cookieC
 import { SECURITY_ENV } from "./envConfig.mjs";
 import { TOKEN_CONFIG } from "./tokenConfig.mjs";
 
-export const doubleCsrfOptions = {
+export const doubleCsrfConfig = {
   getSecret: () => TOKEN_CONFIG.CSRF_SECRET,
   getSessionIdentifier: (req) => {
     const token = req.cookies?.[ACCESS_COOKIE_NAME];

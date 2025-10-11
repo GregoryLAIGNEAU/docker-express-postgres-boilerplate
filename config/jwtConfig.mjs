@@ -13,7 +13,7 @@ const cookieExtractor = (req) => {
   return token;
 };
 
-export const jwtOptions = {
+export const jwtConfig = {
   jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor, ExtractJwt.fromAuthHeaderAsBearerToken()]),
   secretOrKey: TOKEN_CONFIG.ACCESS_TOKEN_SECRET,
 };
