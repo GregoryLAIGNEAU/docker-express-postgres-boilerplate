@@ -1,6 +1,6 @@
 import { TOKEN_CONFIG } from "#config/tokenConfig.mjs";
 import { upsertRefreshToken } from "#models/refreshTokenModel.mjs";
-import { clearAccessCookie, clearRefreshCookie, setAccessCookie, setRefreshCookie } from "#utilities/cookieUtility.mjs";
+import { clearAccessCookie, clearCsrfCookie, clearRefreshCookie, setAccessCookie, setRefreshCookie } from "#utilities/cookieUtility.mjs";
 import { generateJwtToken, getExpiryDate, hashToken } from "#utilities/tokenUtility.mjs";
 
 export async function issueAuthCookies(res, userId, roleId) {
@@ -30,4 +30,5 @@ export async function issueAuthCookies(res, userId, roleId) {
 export const clearAuthCookies = (res) => {
   clearAccessCookie(res);
   clearRefreshCookie(res);
+  clearCsrfCookie(res);
 };
