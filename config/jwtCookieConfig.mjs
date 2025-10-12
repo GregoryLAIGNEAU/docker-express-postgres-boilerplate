@@ -16,3 +16,10 @@ export const refreshCookieConfig = {
   path: "/",
   maxAge: TOKEN_CONFIG.REFRESH_TOKEN_MAX_AGE,
 };
+
+export const csrfCookieConfig = {
+  httpOnly: false,
+  secure: SECURITY_ENV.COOKIE_SECURE,
+  sameSite: "Strict",
+  path: "/",
+};
