@@ -45,5 +45,5 @@ app.use(csrfErrorHandler);
 app.use(errorHandler);
 
 app.listen(APP_CONFIG.PORT, () => {
-  logger.info(`Server is running on http://localhost:${APP_CONFIG.PORT}`);
+  logger.info(`Server is running on ${APP_CONFIG.BASE_URL}:${APP_CONFIG.PORT}`);
 });

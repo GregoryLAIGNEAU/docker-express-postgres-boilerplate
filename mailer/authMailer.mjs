@@ -3,7 +3,7 @@ import { transporter } from "#config/mailerConfig.mjs";
 import { TOKEN_CONFIG } from "#config/tokenConfig.mjs";
 
 export const sendActivationEmail = async (email, activationToken) => {
-  const activationLink = `${APP_CONFIG.BASE_URL}/api/v1/auth/register/activate?token=${activationToken}`;
+  const activationLink = `${APP_CONFIG.BASE_URL}:${APP_CONFIG.PORT}/api/v1/auth/register/activate?token=${activationToken}`;
 
   const mailOptions = {
     to: email,
@@ -32,7 +32,7 @@ export const sendActivationEmail = async (email, activationToken) => {
 };
 
 export const sendResetPasswordEmail = async (email, resetPasswordToken) => {
-  const resetPasswordLink = `${APP_CONFIG.BASE_URL}/api/v1/auth/reset-password/reset?token=${resetPasswordToken}`;
+  const resetPasswordLink = `${APP_CONFIG.BASE_URL}:${APP_CONFIG.PORT}/api/v1/auth/reset-password/reset?token=${resetPasswordToken}`;
 
   const mailOptions = {
     to: email,
