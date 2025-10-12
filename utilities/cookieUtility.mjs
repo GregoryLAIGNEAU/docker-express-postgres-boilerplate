@@ -1,4 +1,4 @@
-import { accessCookieConfig, csrfCookieConfig, refreshCookieConfig } from "#config/jwtCookieConfig.mjs";
+import { accessCookieConfig, csrfCookieConfig, refreshCookieConfig } from "#config/cookieConfig.mjs";
 import { ACCESS_COOKIE_NAME, REFRESH_COOKIE_NAME, X_CSRF_TOKEN_COOKIE_NAME } from "#constants/cookieConstant.mjs";
 
 export const setAccessCookie = (res, accessToken) => res.cookie(ACCESS_COOKIE_NAME, accessToken, accessCookieConfig);
