@@ -11,3 +11,5 @@ adminUserRouter.get("/", authenticateJwt, authorizeRole(ROLE.admin), adminUserCo
 adminUserRouter.get("/:id", authenticateJwt, authorizeRole(ROLE.admin), adminUserController.getUser);
 
 adminUserRouter.patch("/:id", authenticateJwt, authorizeRole(ROLE.admin), adminUserController.updateUser);
+
+adminUserRouter.delete("/:id", authenticateJwt, authorizeRole(ROLE.admin), adminUserController.deleteUser);
