@@ -7,7 +7,7 @@ import { adminUpdateUserValidator, adminUserIdValidator } from "#validators/admi
 export const getUsers = async (_, res) => {
   const users = await getAllUsers();
 
-  if (!users) {
+  if (users.length === 0) {
     throw new NotFoundError("No users found");
   }
 
