@@ -31,3 +31,11 @@ export const serializeAdminUser = (user) => {
 
   return result;
 };
+
+export const serializeAdminUsers = (users) => {
+  if (!Array.isArray(users)) {
+    return [];
+  }
+
+  return users.map(serializeAdminUser).filter(Boolean);
+};
