@@ -54,6 +54,14 @@ export async function getUserByEmail(email) {
   return user;
 }
 
+export async function getAllUsers() {
+  const users = await sql`
+    SELECT * FROM auth.users;
+  `;
+
+  return users;
+}
+
 export async function getUserById(id) {
   const [user] = await sql`
     SELECT * FROM auth.users WHERE id = ${id}
