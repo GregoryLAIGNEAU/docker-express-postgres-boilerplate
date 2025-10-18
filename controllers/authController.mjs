@@ -9,16 +9,10 @@ import { sendActivationEmail, sendResetPasswordEmail } from "#mailer/authMailer.
 import { refreshTokenModel, userModel } from "#models/index.mjs";
 import { clearAuthCookies, issueAuthCookies } from "#services/authService.mjs";
 import { generateToken, hashToken } from "#utilities/tokenUtility.mjs";
-import {
-  forgotPasswordValidator,
-  loginValidator,
-  registerValidator,
-  resendVerificationValidator,
-  resetPasswordValidator,
-} from "#validators/authValidator.mjs";
+import { authValidator } from "#validators/index.mjs";
 
 export const postRegister = async (req, res) => {
-  const { firstName, lastName, email, password } = await registerValidator.validate(req.body);
+  const { firstName, lastName, email, password } = await authValidator.registerValidator.validate(req.body);
 
   const passwordHash = await argon2.hash(password);
 
@@ -54,7 +48,7 @@ export const getActivateAccount = async (req, res) => {
 };
 
 export const postResendVerification = async (req, res) => {
-  const { email } = await resendVerificationValidator.validate(req.body);
+  const { email } = await authValidator.resendVerificationValidator.validate(req.body);
 
   const user = await userModel.getUserByEmail(email);
 
@@ -83,7 +77,7 @@ export const postResendVerification = async (req, res) => {
 };
 
 export const postLogin = async (req, res) => {
-  const { email, password } = await loginValidator.validate(req.body);
+  const { email, password } = await authValidator.loginValidator.validate(req.body);
 
   const user = await userModel.getUserByEmail(email);
 
@@ -115,7 +109,7 @@ export const postLogin = async (req, res) => {
 };
 
 export const postForgotPassword = async (req, res) => {
-  const { email } = await forgotPasswordValidator.validate(req.body);
+  const { email } = await authValidator.forgotPasswordValidator.validate(req.body);
 
   const user = await userModel.getUserByEmail(email);
 
@@ -137,7 +131,7 @@ export const postForgotPassword = async (req, res) => {
 
 export const postResetPassword = async (req, res) => {
   const { token } = req.query;
-  const { email, password, confirmPassword } = await resetPasswordValidator.validate(req.body);
+  const { email, password, confirmPassword } = await authValidator.resetPasswordValidator.validate(req.body);
 
   if (!token || typeof token !== "string" || token.length !== 64) {
     throw new BadRequestError("This password reset link is invalid or has expired. Please request a new one.");

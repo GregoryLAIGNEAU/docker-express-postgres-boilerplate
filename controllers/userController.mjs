@@ -3,7 +3,7 @@ import { NotFoundError } from "#errors/indexError.mjs";
 import { userModel } from "#models/index.mjs";
 import { serializeUser } from "#serialiazers/userSerializer.mjs";
 import { clearAuthCookies } from "#services/authService.mjs";
-import { updateUserValidator } from "#validators/userValidator.mjs";
+import { userValidator } from "#validators/index.mjs";
 
 export const getUser = async (req, res) => {
   const currentUserId = req.user.id;
@@ -22,7 +22,7 @@ export const getUser = async (req, res) => {
 export const updateUser = async (req, res) => {
   const currentUserId = req.user.id;
 
-  const payload = await updateUserValidator.validate(req.body, {
+  const payload = await userValidator.updateUserValidator.validate(req.body, {
     meta: { userId: currentUserId },
   });
 

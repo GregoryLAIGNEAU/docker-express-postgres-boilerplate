@@ -2,7 +2,7 @@ import { ACCOUNT_STATUS } from "#constants/accountStatusConstant.mjs";
 import { NotFoundError } from "#errors/indexError.mjs";
 import { userModel } from "#models/index.mjs";
 import { serializeAdminUser, serializeAdminUsers } from "#serialiazers/userSerializer.mjs";
-import { adminUpdateUserValidator, adminUserIdValidator } from "#validators/adminUserValidator.mjs";
+import { adminUserValidator } from "#validators/admin/index.mjs";
 
 export const getUsers = async (_, res) => {
   const users = await userModel.getAllUsers();
@@ -17,7 +17,7 @@ export const getUsers = async (_, res) => {
 };
 
 export const getUser = async (req, res) => {
-  const { id: userId } = await adminUserIdValidator.validate(req.params);
+  const { id: userId } = await adminUserValidator.adminUserIdValidator.validate(req.params);
 
   const user = await userModel.getUserById(userId);
 
@@ -31,9 +31,9 @@ export const getUser = async (req, res) => {
 };
 
 export const updateUser = async (req, res) => {
-  const { id: userId } = await adminUserIdValidator.validate(req.params);
+  const { id: userId } = await adminUserValidator.adminUserIdValidator.validate(req.params);
 
-  const payload = await adminUpdateUserValidator.validate(req.body, {
+  const payload = await adminUserValidator.adminUpdateUserValidator.validate(req.body, {
     meta: { userId: userId },
   });
   const updatedUser = await userModel.updateUserById(userId, payload);
@@ -48,7 +48,7 @@ export const updateUser = async (req, res) => {
 };
 
 export const deleteUser = async (req, res) => {
-  const { id: userId } = await adminUserIdValidator.validate(req.params);
+  const { id: userId } = await adminUserValidator.adminUserIdValidator.validate(req.params);
 
   const payload = {
     account_status_id: ACCOUNT_STATUS.deactivated,
