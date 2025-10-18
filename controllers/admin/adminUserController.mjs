@@ -1,6 +1,7 @@
 import { ACCOUNT_STATUS } from "#constants/accountStatusConstant.mjs";
 import { NotFoundError } from "#errors/indexError.mjs";
 import { getAllUsers, getUserById, updateUserById } from "#models/userModel.mjs";
+import { serializeAdminUser, serializeAdminUsers } from "#serialiazers/userSerializer.mjs";
 import { adminUpdateUserValidator, adminUserIdValidator } from "#validators/adminUserValidator.mjs";
 
 export const getUsers = async (_, res) => {
@@ -10,7 +11,9 @@ export const getUsers = async (_, res) => {
     throw new NotFoundError("No users found");
   }
 
-  return res.status(200).json(users);
+  const serializedUsers = serializeAdminUsers(users);
+
+  return res.status(200).json(serializedUsers);
 };
 
 export const getUser = async (req, res) => {
@@ -22,7 +25,9 @@ export const getUser = async (req, res) => {
     throw new NotFoundError("User not found");
   }
 
-  return res.status(200).json(user);
+  const serializedUser = serializeAdminUser(user);
+
+  return res.status(200).json(serializedUser);
 };
 
 export const updateUser = async (req, res) => {
@@ -37,7 +42,9 @@ export const updateUser = async (req, res) => {
     throw new NotFoundError("User not found");
   }
 
-  return res.status(200).json(updatedUser);
+  const serializedUpdatedUser = serializeAdminUser(updatedUser);
+
+  return res.status(200).json(serializedUpdatedUser);
 };
 
 export const deleteUser = async (req, res) => {
