@@ -2,8 +2,8 @@ import vine from "@vinejs/vine";
 
 import { ACCOUNT_STATUS } from "#constants/accountStatusConstant.mjs";
 import { ROLE } from "#constants/roleConstant.mjs";
-import { uniqueRule } from "./rules/unique.mjs";
-import { emailSchema, nameSchema } from "./shared/index.mjs";
+import { uniqueRule } from "#validators/rules/unique.mjs";
+import { emailSchema, nameSchema } from "#validators/shared/index.mjs";
 
 export const adminUserIdValidator = vine.compile(
   vine.object({
