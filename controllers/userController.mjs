@@ -1,6 +1,6 @@
 import { ACCOUNT_STATUS } from "#constants/accountStatusConstant.mjs";
 import { NotFoundError } from "#errors/indexError.mjs";
-import { getUserById, updateUserById } from "#models/userModel.mjs";
+import { userModel } from "#models/index.mjs";
 import { serializeUser } from "#serialiazers/userSerializer.mjs";
 import { clearAuthCookies } from "#services/authService.mjs";
 import { updateUserValidator } from "#validators/userValidator.mjs";
@@ -8,7 +8,7 @@ import { updateUserValidator } from "#validators/userValidator.mjs";
 export const getUser = async (req, res) => {
   const currentUserId = req.user.id;
 
-  const user = await getUserById(currentUserId);
+  const user = await userModel.getUserById(currentUserId);
 
   if (!user) {
     throw new NotFoundError("User not found");
@@ -26,7 +26,7 @@ export const updateUser = async (req, res) => {
     meta: { userId: currentUserId },
   });
 
-  const updatedUser = await updateUserById(currentUserId, payload);
+  const updatedUser = await userModel.updateUserById(currentUserId, payload);
 
   if (!updatedUser) {
     throw new NotFoundError("User not found");
@@ -45,7 +45,7 @@ export const deleteUser = async (req, res) => {
     deleted_at: new Date(),
   };
 
-  const updatedUser = await updateUserById(currentUserId, payload);
+  const updatedUser = await userModel.updateUserById(currentUserId, payload);
 
   if (!updatedUser) {
     throw new NotFoundError("User not found");

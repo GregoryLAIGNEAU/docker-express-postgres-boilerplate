@@ -6,16 +6,7 @@ import { ACCOUNT_STATUS } from "#constants/accountStatusConstant.mjs";
 import { REFRESH_COOKIE_NAME } from "#constants/cookieConstant.mjs";
 import { BadRequestError, UnauthorizedError } from "#errors/indexError.mjs";
 import { sendActivationEmail, sendResetPasswordEmail } from "#mailer/authMailer.mjs";
-import { getRefreshTokenByHash, revokeRefreshToken } from "#models/refreshTokenModel.mjs";
-import {
-  activateAccount,
-  createUser,
-  getUserByEmail,
-  resetPassword,
-  updateResetPasswordToken,
-  updateVerificationToken,
-  verifyResetPasswordToken,
-} from "#models/userModel.mjs";
+import { refreshTokenModel, userModel } from "#models/index.mjs";
 import { clearAuthCookies, issueAuthCookies } from "#services/authService.mjs";
 import { generateToken, hashToken } from "#utilities/tokenUtility.mjs";
 import {
@@ -34,7 +25,7 @@ export const postRegister = async (req, res) => {
   const activationToken = generateToken();
   const activationTokenHash = hashToken(activationToken);
 
-  await createUser(firstName, lastName, email, passwordHash, activationTokenHash);
+  await userModel.createUser(firstName, lastName, email, passwordHash, activationTokenHash);
 
   await sendActivationEmail(email, activationToken);
 
@@ -53,7 +44,7 @@ export const getActivateAccount = async (req, res) => {
 
   const activationTokenHash = hashToken(token);
 
-  const user = await activateAccount(activationTokenHash);
+  const user = await userModel.activateAccount(activationTokenHash);
 
   if (!user) {
     throw new BadRequestError("This activation link is invalid or has expired. Please request a new one.");
@@ -65,7 +56,7 @@ export const getActivateAccount = async (req, res) => {
 export const postResendVerification = async (req, res) => {
   const { email } = await resendVerificationValidator.validate(req.body);
 
-  const user = await getUserByEmail(email);
+  const user = await userModel.getUserByEmail(email);
 
   if (!user) {
     return res.status(200).json({
@@ -81,7 +72,7 @@ export const postResendVerification = async (req, res) => {
   const activationToken = generateToken();
   const activationTokenHash = hashToken(activationToken);
 
-  await updateVerificationToken(user.email, activationTokenHash);
+  await userModel.updateVerificationToken(user.email, activationTokenHash);
 
   await sendActivationEmail(user.email, activationToken);
 
@@ -94,7 +85,7 @@ export const postResendVerification = async (req, res) => {
 export const postLogin = async (req, res) => {
   const { email, password } = await loginValidator.validate(req.body);
 
-  const user = await getUserByEmail(email);
+  const user = await userModel.getUserByEmail(email);
 
   if (!user) {
     throw new UnauthorizedError("Invalid email or password");
@@ -126,14 +117,14 @@ export const postLogin = async (req, res) => {
 export const postForgotPassword = async (req, res) => {
   const { email } = await forgotPasswordValidator.validate(req.body);
 
-  const user = await getUserByEmail(email);
+  const user = await userModel.getUserByEmail(email);
 
   if (user) {
     const userId = user.id;
     const resetPasswordToken = generateToken();
     const resetPasswordTokenHash = hashToken(resetPasswordToken);
 
-    await updateResetPasswordToken(userId, resetPasswordTokenHash);
+    await userModel.updateResetPasswordToken(userId, resetPasswordTokenHash);
 
     await sendResetPasswordEmail(email, resetPasswordToken);
   }
@@ -158,7 +149,7 @@ export const postResetPassword = async (req, res) => {
 
   const resetPasswordTokenHash = hashToken(token);
 
-  const user = await verifyResetPasswordToken(email, resetPasswordTokenHash);
+  const user = await userModel.verifyResetPasswordToken(email, resetPasswordTokenHash);
 
   if (!user) {
     throw new UnauthorizedError(
@@ -168,7 +159,7 @@ export const postResetPassword = async (req, res) => {
 
   const passwordHash = await argon2.hash(password);
 
-  await resetPassword(email, resetPasswordTokenHash, passwordHash);
+  await userModel.resetPassword(email, resetPasswordTokenHash, passwordHash);
 
   res.status(200).json({
     message: "Your password has been reset successfully",
@@ -185,7 +176,7 @@ export const postRefreshToken = async (req, res) => {
   const decoded = jwt.verify(refreshToken, TOKEN_CONFIG.REFRESH_TOKEN_SECRET);
   const tokenHash = hashToken(refreshToken);
 
-  const validRefreshToken = await getRefreshTokenByHash(tokenHash);
+  const validRefreshToken = await refreshTokenModel.getRefreshTokenByHash(tokenHash);
 
   if (!validRefreshToken) {
     throw new UnauthorizedError("Invalid refresh token");
@@ -201,7 +192,7 @@ export const postLogout = async (req, res) => {
 
   if (refreshToken) {
     const tokenHash = hashToken(refreshToken);
-    await revokeRefreshToken(tokenHash);
+    await refreshTokenModel.revokeRefreshToken(tokenHash);
   }
 
   clearAuthCookies(res);
