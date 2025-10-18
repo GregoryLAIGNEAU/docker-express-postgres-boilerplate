@@ -9,3 +9,5 @@ export const adminUserRouter = Router();
 adminUserRouter.get("/", authenticateJwt, authorizeRole(ROLE.admin), adminUserController.getUsers);
 
 adminUserRouter.get("/:id", authenticateJwt, authorizeRole(ROLE.admin), adminUserController.getUser);
+
+adminUserRouter.patch("/:id", authenticateJwt, authorizeRole(ROLE.admin), adminUserController.updateUser);

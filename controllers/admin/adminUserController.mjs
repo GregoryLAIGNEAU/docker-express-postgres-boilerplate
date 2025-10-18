@@ -1,6 +1,6 @@
 import { NotFoundError } from "#errors/indexError.mjs";
-import { getAllUsers, getUserById } from "#models/userModel.mjs";
-import { adminUserIdValidator } from "#validators/adminUserValidator.mjs";
+import { getAllUsers, getUserById, updateUserById } from "#models/userModel.mjs";
+import { adminUpdateUserValidator, adminUserIdValidator } from "#validators/adminUserValidator.mjs";
 
 export const getUsers = async (_, res) => {
   const users = await getAllUsers();
@@ -22,4 +22,19 @@ export const getUser = async (req, res) => {
   }
 
   return res.status(200).json(user);
+};
+
+export const updateUser = async (req, res) => {
+  const { id: userId } = await adminUserIdValidator.validate(req.params);
+
+  const payload = await adminUpdateUserValidator.validate(req.body, {
+    meta: { userId: userId },
+  });
+  const updatedUser = await updateUserById(userId, payload);
+
+  if (!updatedUser) {
+    throw new NotFoundError("User not found");
+  }
+
+  return res.status(200).json(updatedUser);
 };
