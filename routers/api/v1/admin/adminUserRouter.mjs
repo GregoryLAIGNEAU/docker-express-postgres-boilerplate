@@ -7,3 +7,5 @@ import { authenticateJwt, authorizeRole } from "#middlewares/authMiddleware.mjs"
 export const adminUserRouter = Router();
 
 adminUserRouter.get("/", authenticateJwt, authorizeRole(ROLE.admin), adminUserController.getUsers);
+
+adminUserRouter.get("/:id", authenticateJwt, authorizeRole(ROLE.admin), adminUserController.getUser);
