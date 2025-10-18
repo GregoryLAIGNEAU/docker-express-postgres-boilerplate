@@ -40,7 +40,7 @@ app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/csrf-token", csrfRouter);
 app.use(doubleCsrfProtection);
 app.use("/api/v1/users", userRouter);
-app.use("/api/v1/admin/users/", adminUserRouter);
+app.use("/api/v1/admin/users", adminUserRouter);
 
 app.use(notFound);
 app.use(csrfErrorHandler);
