@@ -1,3 +1,5 @@
+import fs from "node:fs";
+
 export function getRequiredEnv(name, parser = String) {
   const envValue = process.env[name];
 
@@ -9,6 +11,16 @@ export function getRequiredEnv(name, parser = String) {
     return parser(envValue);
   } catch (err) {
     throw new Error(`Failed to parse environment variable ${name}: ${err.message}`);
+  }
+}
+
+export function loadSecretFile(name) {
+  const secretPath = `/run/secrets/${name}`;
+
+  try {
+    return fs.readFileSync(secretPath, "utf8").trim();
+  } catch (_err) {
+    return null;
   }
 }
 
