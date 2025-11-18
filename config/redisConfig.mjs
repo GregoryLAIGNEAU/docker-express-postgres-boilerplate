@@ -1,10 +1,5 @@
 import { REDIS_CONFIG } from "./envConfig.mjs";
 
 export const redisConfig = {
-  password: REDIS_CONFIG.REDIS_PASSWORD,
-  socket: {
-    host: REDIS_CONFIG.REDIS_HOST,
-    port: REDIS_CONFIG.REDIS_PORT,
-    tls: REDIS_CONFIG.REDIS_TLS,
-  },
+  url: `redis://${REDIS_CONFIG.REDIS_USER}:${REDIS_CONFIG.REDIS_PASSWORD}@${REDIS_CONFIG.REDIS_HOST}:${REDIS_CONFIG.REDIS_PORT}`,
 };
