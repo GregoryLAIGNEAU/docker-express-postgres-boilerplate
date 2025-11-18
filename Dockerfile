@@ -1,5 +1,7 @@
 FROM node:22-alpine AS base
 
+RUN apk add --no-cache curl
+
 WORKDIR /app
 
 EXPOSE 5000
@@ -22,7 +24,7 @@ CMD ["npm", "run", "dev"]
 
 FROM base AS production
 
-COPY package*.json .
+COPY package*.json ./
 
 USER root
 
