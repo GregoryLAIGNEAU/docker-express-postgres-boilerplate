@@ -1,11 +1,15 @@
-export function requireEnvVar(name, parser = String) {
-  const raw = process.env[name];
+export function getRequiredEnv(name, parser = String) {
+  const envValue = process.env[name];
 
-  if (!raw) {
-    throw new Error(`${name} is not defined in environment variables`);
+  if (envValue == null || envValue === "") {
+    throw new Error(`Missing required environment variable: ${name}`);
   }
 
-  return parser(raw);
+  try {
+    return parser(envValue);
+  } catch (err) {
+    throw new Error(`Failed to parse environment variable ${name}: ${err.message}`);
+  }
 }
 
 const isProduction = process.env.NODE_ENV === "production";
