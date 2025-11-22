@@ -36,7 +36,7 @@ app.use(rateLimiter);
 
 passport.use(jwtStrategy);
 
-app.get("/health", async (_req, res) => {
+app.get("/api/v1/health", async (_req, res) => {
   res.status(200).json({ status: "ok" });
 });
 
