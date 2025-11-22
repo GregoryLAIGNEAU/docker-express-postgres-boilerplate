@@ -225,11 +225,43 @@ services:
       restart_policy:
         condition: none
 
+  restic-restore:
+    image: gregorylaigneau/restic:0.0.1
+    entrypoint: ["/bin/sh", "-c"]
+    command: ["sleep infinity"]
+    environment:
+      RESTIC_REPOSITORY_FILE: /run/secrets/restic_repository
+      RESTIC_PASSWORD_FILE: /run/secrets/restic_password
+      RESTIC_RESTORE_TARGET: ${RESTIC_RESTORE_TARGET}
+      BACKUP_DIR: ${BACKUP_DIR}
+      PGDATABASE: ${PG_NAME}
+      PGHOST: ${PG_HOST}
+      PGUSER: ${PG_USERNAME}
+      DOCKER_LOG_LEVEL: ${DOCKER_LOG_LEVEL}
+      RESTIC_HOST: ${RESTIC_HOST}
+    secrets:
+      - restic_repository
+      - restic_password
+      - aws_access_key_id
+      - aws_secret_access_key
+      - db_password
+    volumes:
+      - restic-restore-data:/home/resticuser/restore
+      - restic-cache:/home/resticuser/.cache/restic
+    networks:
+      - app-network
+    deploy:
+      mode: replicated
+      replicas: 0
+      restart_policy:
+        condition: none
+
 volumes:
   postgres-data:
   redis-data:
   db-backups:
   restic-cache:
+  restic-restore-data:
 
 networks:
   app-network:
