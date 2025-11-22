@@ -5,7 +5,6 @@ WORKDIR /app
 USER sqitch
 
 COPY --chown=sqitch:sqitch database/migrations /app/database/migrations
-COPY --chown=sqitch:sqitch sqitch.conf /app/sqitch.conf
 
 USER root
 
