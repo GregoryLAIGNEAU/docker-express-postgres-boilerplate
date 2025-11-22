@@ -273,16 +273,6 @@ configs:
     file: ./sqitch.conf
 
 secrets:
-  docker_config:
-    external: true
-  aws_access_key_id:
-    external: true
-  aws_secret_access_key:
-    external: true
-  restic_repository:
-    external: true
-  restic_password:
-    external: true
   db_password:
     external: true
   redis_password:
@@ -296,4 +286,14 @@ secrets:
   refresh_token_secret:
     external: true
   csrf_secret:
+    external: true
+  aws_access_key_id:
+    external: true
+  aws_secret_access_key:
+    external: true
+  restic_repository:
+    external: true
+  restic_password:
+    external: true
+  docker_config:
     external: true
