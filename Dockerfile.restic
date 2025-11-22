@@ -1,0 +1,17 @@
+FROM restic/restic:0.18.1
+
+RUN apk add --no-cache postgresql-client
+
+RUN adduser -D -h /home/resticuser resticuser \
+    && mkdir -p /home/resticuser/.cache/restic \
+    && mkdir -p /home/resticuser/restore \
+    && chown -R resticuser:resticuser /home/resticuser
+
+COPY scripts/*.sh /usr/local/bin/
+COPY scripts/utils/*.sh /usr/local/bin/utils/
+RUN chmod +x /usr/local/bin/*.sh /usr/local/bin/utils/*.sh
+
+WORKDIR /home/resticuser
+ENV XDG_CACHE_HOME=/home/resticuser/.cache
+
+USER resticuser
