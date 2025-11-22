@@ -82,6 +82,29 @@ services:
       restart_policy:
         condition: on-failure
 
+  sqitch:
+    image: gregorylaigneau/sqitch:0.0.1
+    entrypoint: ["/bin/sh", "-c"]
+    command: ["sleep infinity"]
+    environment:
+      PGUSER: ${PG_USERNAME}
+      PGHOST: ${PG_HOST}
+      PGDATABASE: ${PG_NAME}
+      PGPORT: ${PG_PORT}
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+    secrets:
+      - db_password
+    configs:
+      - source: sqitch_config
+        target: /app/sqitch.conf
+    networks:
+      - app-network
+    deploy:
+      mode: replicated
+      replicas: 0
+      restart_policy:
+        condition: none
+
 volumes:
   postgres-data:
   redis-data:
@@ -90,6 +113,10 @@ networks:
   app-network:
     driver: overlay
     attachable: true
+
+configs:
+  sqitch_config:
+    file: ./sqitch.conf
 
 secrets:
   db_password:
