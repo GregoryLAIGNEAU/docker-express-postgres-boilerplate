@@ -36,6 +36,10 @@ app.use(rateLimiter);
 
 passport.use(jwtStrategy);
 
+app.get("/health", async (_req, res) => {
+  res.status(200).json({ status: "ok" });
+});
+
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/csrf-token", csrfRouter);
 app.use(doubleCsrfProtection);
