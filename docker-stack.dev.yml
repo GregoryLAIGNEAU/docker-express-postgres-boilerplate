@@ -169,10 +169,67 @@ services:
       restart_policy:
         condition: none
 
+  restic-init:
+    image: gregorylaigneau/restic:0.0.1
+    entrypoint: ["/usr/local/bin/restic-init.sh"]
+    environment:
+      RESTIC_REPOSITORY_FILE: /run/secrets/restic_repository
+      RESTIC_PASSWORD_FILE: /run/secrets/restic_password
+      DOCKER_LOG_LEVEL: ${DOCKER_LOG_LEVEL}
+    secrets:
+      - restic_repository
+      - restic_password
+      - aws_access_key_id
+      - aws_secret_access_key
+    deploy:
+      mode: replicated-job
+      replicas: 1
+      restart_policy:
+        condition: none
+
+  restic-backup:
+    image: gregorylaigneau/restic:0.0.1
+    entrypoint: ["/usr/local/bin/restic-backup.sh"]
+    environment:
+      RESTIC_REPOSITORY_FILE: /run/secrets/restic_repository
+      RESTIC_PASSWORD_FILE: /run/secrets/restic_password
+      AWS_ACCESS_KEY_ID_FILE: /run/secrets/aws_access_key_id
+      AWS_SECRET_ACCESS_KEY_FILE: /run/secrets/aws_secret_access_key
+      DOCKER_LOG_LEVEL: ${DOCKER_LOG_LEVEL}
+      BACKUP_DIR: ${BACKUP_DIR}
+      BACKUP_TAG: ${BACKUP_TAG}
+      BACKUP_KEEP_DAILY: ${BACKUP_KEEP_DAILY}
+      BACKUP_KEEP_WEEKLY: ${BACKUP_KEEP_WEEKLY}
+      BACKUP_KEEP_MONTHLY: ${BACKUP_KEEP_MONTHLY}
+      RESTIC_HOST: ${RESTIC_HOST}
+    secrets:
+      - restic_repository
+      - restic_password
+      - aws_access_key_id
+      - aws_secret_access_key
+      - source: docker_config
+        target: /root/.docker/config.json
+        mode: 0400
+    volumes:
+      - db-backups:/backups:ro
+      - restic-cache:/home/resticuser/.cache/restic
+    deploy:
+      mode: replicated
+      replicas: 0
+      labels:
+        - "swarm.cronjob.enable=true"
+        - "swarm.cronjob.schedule=*/10 * * * *"
+        - "swarm.cronjob.skip-running=true"
+        - "swarm.cronjob.name=restic-offsite-backup"
+        - "swarm.cronjob.timezone=Europe/Paris"
+      restart_policy:
+        condition: none
+
 volumes:
   postgres-data:
   redis-data:
   db-backups:
+  restic-cache:
 
 networks:
   app-network:
@@ -184,6 +241,16 @@ configs:
     file: ./sqitch.conf
 
 secrets:
+  docker_config:
+    external: true
+  aws_access_key_id:
+    file: ./secrets/aws_access_key_id.txt
+  aws_secret_access_key:
+    file: ./secrets/aws_secret_access_key.txt
+  restic_repository:
+    file: ./secrets/restic_repository.txt
+  restic_password:
+    file: ./secrets/restic_password.txt
   db_password:
     file: ./secrets/db_password.txt
   redis_password:
