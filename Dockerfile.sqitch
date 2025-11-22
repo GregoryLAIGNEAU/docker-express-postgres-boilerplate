@@ -1,0 +1,16 @@
+FROM sqitch/sqitch:v1.6.0
+
+WORKDIR /app
+
+USER sqitch
+
+COPY --chown=sqitch:sqitch database/migrations /app/database/migrations
+COPY --chown=sqitch:sqitch sqitch.conf /app/sqitch.conf
+
+USER root
+
+COPY scripts/*.sh /usr/local/bin/
+COPY scripts/utils/*.sh /usr/local/bin/utils/
+RUN chmod +x /usr/local/bin/*.sh /usr/local/bin/utils/*.sh
+
+USER sqitch
