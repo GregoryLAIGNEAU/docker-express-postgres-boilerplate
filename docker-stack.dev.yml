@@ -105,9 +105,74 @@ services:
       restart_policy:
         condition: none
 
+  swarm-cronjob:
+    image: crazymax/swarm-cronjob:1.14.0
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - "TZ=Europe/Paris"
+      - "LOG_LEVEL=info"
+      - "LOG_JSON=true"
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: any
+
+  db-backup:
+    image: gregorylaigneau/pg-backup-restore:0.0.1
+    entrypoint: ["/usr/local/bin/db-backup.sh"]
+    environment:
+      PGDATABASE: ${PG_NAME}
+      PGHOST: ${PG_HOST}
+      PGUSER: ${PG_USERNAME}
+      DOCKER_LOG_LEVEL: ${DOCKER_LOG_LEVEL}
+      BACKUP_LOCAL_RETENTION_COUNT: ${BACKUP_LOCAL_RETENTION_COUNT}
+      BACKUP_DIR: ${BACKUP_DIR}
+    secrets:
+      -  db_password
+    volumes:
+      - db-backups:/backups
+    networks:
+      - app-network
+    deploy:
+      mode: replicated-job
+      labels:
+        - "swarm.cronjob.enable=true"
+        - "swarm.cronjob.schedule=*/10 * * * *"
+        - "swarm.cronjob.skip-running=true"
+        - "swarm.cronjob.name=daily-database-backup"
+        - "swarm.cronjob.timezone=Europe/Paris"
+      restart_policy:
+        condition: none
+
+  db-restore:
+    image: gregorylaigneau/pg-backup-restore:0.0.1
+    entrypoint: ["/bin/sh", "-c"]
+    command: ["sleep infinity"]
+    working_dir: /app
+    environment:
+      PGDATABASE: ${PG_NAME}
+      PGHOST: ${PG_HOST}
+      PGUSER: ${PG_USERNAME}
+      DOCKER_LOG_LEVEL: ${DOCKER_LOG_LEVEL}
+      BACKUP_DIR: ${BACKUP_DIR}
+    secrets:
+      - db_password
+    volumes:
+      - db-backups:/backups:ro
+    networks:
+      - app-network
+    deploy:
+      mode: replicated
+      replicas: 0
+      restart_policy:
+        condition: none
+
 volumes:
   postgres-data:
   redis-data:
+  db-backups:
 
 networks:
   app-network:
