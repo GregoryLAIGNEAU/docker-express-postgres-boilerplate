@@ -1,0 +1,12 @@
+FROM postgres:17.6-alpine
+
+RUN apk add --no-cache postgresql-client
+
+RUN mkdir -p /backups \
+    && chown -R postgres:postgres /backups
+
+COPY scripts/*.sh /usr/local/bin/
+COPY scripts/utils/*.sh /usr/local/bin/utils/
+RUN chmod +x /usr/local/bin/*.sh /usr/local/bin/utils/*.sh
+
+USER postgres
