@@ -15,8 +15,9 @@ services:
       ACCESS_TOKEN_SECRET_FILE: /run/secrets/access_token_secret
       REFRESH_TOKEN_SECRET_FILE: /run/secrets/refresh_token_secret
       CSRF_SECRET_FILE: /run/secrets/csrf_secret
+      HEALTHCHECK_URL: ${HEALTHCHECK_URL}
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      test: ["CMD-SHELL", "curl -f $HEALTHCHECK_URL || exit 1"]
       interval: 30s
       timeout: 3s
       retries: 5
