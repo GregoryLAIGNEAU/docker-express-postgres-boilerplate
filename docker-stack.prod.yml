@@ -1,0 +1,490 @@
+services:
+  app:
+    image: boilerplate:prod
+    environment:
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+      REDIS_PASSWORD_FILE: /run/secrets/redis_password
+      SMTP_PASSWORD_FILE: /run/secrets/smtp_password
+      ACCESS_TOKEN_SECRET_FILE: /run/secrets/access_token_secret
+      REFRESH_TOKEN_SECRET_FILE: /run/secrets/refresh_token_secret
+      CSRF_SECRET_FILE: /run/secrets/csrf_secret
+      HEALTHCHECK_URL: ${HEALTHCHECK_URL}
+    secrets:
+      - source: db_password
+        target: db_password
+        uid: '1000'
+        gid: '1000'
+        mode: 0400
+      - source: redis_password
+        target: redis_password
+        uid: '1000'
+        gid: '1000'
+        mode: 0400
+      - source: smtp_password
+        target: smtp_password
+        uid: '1000'
+        gid: '1000'
+        mode: 0400
+      - source: access_token_secret
+        target: access_token_secret
+        uid: '1000'
+        gid: '1000'
+        mode: 0400
+      - source: refresh_token_secret
+        target: refresh_token_secret
+        uid: '1000'
+        gid: '1000'
+        mode: 0400
+      - source: csrf_secret
+        target: csrf_secret
+        uid: '1000'
+        gid: '1000'
+        mode: 0400
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f $HEALTHCHECK_URL || exit 1"]
+      interval: 30s
+      timeout: 3s
+      retries: 5
+      start_period: 30s
+    ports:
+      - "5000:5000"
+    networks:
+      - app-network
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
+        failure_action: rollback
+      rollback_config:
+        parallelism: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 5
+        window: 120s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    tmpfs:
+      - /tmp:size=128m
+    cap_drop:
+      - ALL
+
+  database:
+    image: postgres:17.6-alpine
+    user: "postgres:postgres"
+    environment:
+      POSTGRES_DB: ${PG_NAME}
+      POSTGRES_USER: ${PG_USERNAME}
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+    secrets:
+      - source: db_password
+        target: db_password
+        uid: '70'
+        gid: '70'
+        mode: 0400
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    tmpfs:
+      - /tmp:size=512m
+    networks:
+      - app-network
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
+        window: 120s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    
+  redis:
+    image: redis:7.2.10-alpine
+    user: "redis:redis"
+    command: ["redis-server", "--appendonly", "yes", "--aclfile", "/run/secrets/redis_acl"]
+    environment:
+      REDIS_PASSWORD_FILE: /run/secrets/redis_password
+    secrets:
+      - source: redis_acl
+        target: redis_acl
+        uid: '999'
+        gid: '1000'
+        mode: 0400
+      - source: redis_password
+        target: redis_password
+        uid: '999'
+        gid: '1000'
+        mode: 0400
+    healthcheck:
+      test: ["CMD", "redis-cli", "--user", "healthcheck", "--pass", "", "--no-auth-warning", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 3s
+    volumes:
+      - redis-data:/data
+    tmpfs:
+      - /tmp:size=64m
+    networks:
+      - app-network
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 5
+        window: 120s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    read_only: true
+
+  sqitch:
+    image: gregorylaigneau/sqitch:0.0.1
+    entrypoint: ["/bin/sh", "-c"]
+    command: ["sleep infinity"]
+    environment:
+      PGUSER: ${PG_USERNAME}
+      PGHOST: ${PG_HOST}
+      PGDATABASE: ${PG_NAME}
+      PGPORT: ${PG_PORT}
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+    secrets:
+      - source: db_password
+        target: db_password
+        uid: "1024"
+        gid: "1024"
+        mode: 0400
+    configs:
+      - source: sqitch_config
+        target: /app/sqitch.conf
+    tmpfs:
+      - /tmp:size=64m
+    networks:
+      - app-network
+    deploy:
+      mode: replicated
+      replicas: 0
+      restart_policy:
+        condition: none
+    read_only: true
+    cap_drop:
+      - ALL
+
+  swarm-cronjob:
+    image: crazymax/swarm-cronjob:1.14.0
+    environment:
+      - "TZ: Europe/Paris"
+      - "LOG_LEVEL: info"
+      - "LOG_JSON: true"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: any
+      placement:
+        constraints:
+          - node.role == manager
+
+  db-backup:
+    image: gregorylaigneau/pg-backup-restore:0.0.1
+    entrypoint: ["/usr/local/bin/db-backup.sh"]
+    environment:
+      PGDATABASE: ${PG_NAME}
+      PGHOST: ${PG_HOST}
+      PGUSER: ${PG_USERNAME}
+      DOCKER_LOG_LEVEL: ${DOCKER_LOG_LEVEL}
+      BACKUP_LOCAL_RETENTION_COUNT: ${BACKUP_LOCAL_RETENTION_COUNT}
+      BACKUP_DIR: ${BACKUP_DIR}
+    secrets:
+      - source: db_password
+        target: db_password
+        uid: "70"
+        gid: "70"
+        mode: 0400
+    volumes:
+      - db-backups:/backups
+    tmpfs:
+      - /tmp:size=128m
+    networks:
+      - app-network
+    deploy:
+      mode: replicated-job
+      labels:
+        - "swarm.cronjob.enable=true"
+        - "swarm.cronjob.schedule=0 1 * * *"
+        - "swarm.cronjob.skip-running=true"
+        - "swarm.cronjob.name=daily-database-backup"
+        - "swarm.cronjob.timezone=Europe/Paris"
+      restart_policy:
+        condition: none
+      placement:
+        constraints:
+          - node.role == manager
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    read_only: true
+    cap_drop:
+      - ALL
+    
+  db-restore:
+    image: gregorylaigneau/pg-backup-restore:0.0.1
+    entrypoint: ["/bin/sh", "-c"]
+    command: ["sleep infinity"]
+    working_dir: /app
+    environment:
+      PGDATABASE: ${PG_NAME}
+      PGHOST: ${PG_HOST}
+      PGUSER: ${PG_USERNAME}
+      DOCKER_LOG_LEVEL: ${DOCKER_LOG_LEVEL}
+      BACKUP_DIR: ${BACKUP_DIR}
+    secrets:
+      - source: db_password
+        target: db_password
+        uid: "70"
+        gid: "70"
+        mode: 0400
+    volumes:
+      - db-backups:/backups:ro
+    tmpfs:
+      - /tmp:size=256m
+    networks:
+      - app-network
+    deploy:
+      mode: replicated
+      replicas: 0
+      restart_policy:
+        condition: none
+      placement:
+        constraints:
+          - node.role == manager
+    read_only: true
+    cap_drop:
+      - ALL
+
+  restic-init:
+    image: gregorylaigneau/restic:0.0.1
+    entrypoint: ["/usr/local/bin/restic-init.sh"]
+    environment:
+      RESTIC_REPOSITORY_FILE: /run/secrets/restic_repository
+      RESTIC_PASSWORD_FILE: /run/secrets/restic_password
+      DOCKER_LOG_LEVEL: ${DOCKER_LOG_LEVEL}
+    secrets:
+      - source: restic_repository
+        target: restic_repository
+        uid: "1000"
+        gid: "1000"
+        mode: 0400
+      - source: restic_password
+        target: restic_password
+        uid: "1000"
+        gid: "1000"
+        mode: 0400
+      - source: aws_access_key_id
+        target: aws_access_key_id
+        uid: "1000"
+        gid: "1000"
+        mode: 0400
+      - source: aws_secret_access_key
+        target: aws_secret_access_key
+        uid: "1000"
+        gid: "1000"
+        mode: 0400
+    tmpfs:
+      - /tmp:size=32m
+    deploy:
+      mode: replicated-job
+      replicas: 1
+      restart_policy:
+        condition: none
+      placement:
+        constraints:
+          - node.role == manager
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    read_only: true
+    cap_drop:
+      - ALL
+
+  restic-backup:
+    image: gregorylaigneau/restic:0.0.1
+    entrypoint: ["/usr/local/bin/restic-backup.sh"]
+    environment:
+      RESTIC_REPOSITORY_FILE: /run/secrets/restic_repository
+      RESTIC_PASSWORD_FILE: /run/secrets/restic_password
+      AWS_ACCESS_KEY_ID_FILE: /run/secrets/aws_access_key_id
+      AWS_SECRET_ACCESS_KEY_FILE: /run/secrets/aws_secret_access_key
+      DOCKER_LOG_LEVEL: ${DOCKER_LOG_LEVEL}
+      BACKUP_DIR: ${BACKUP_DIR}
+      BACKUP_TAG: ${BACKUP_TAG}
+      BACKUP_KEEP_DAILY: ${BACKUP_KEEP_DAILY}
+      BACKUP_KEEP_WEEKLY: ${BACKUP_KEEP_WEEKLY}
+      BACKUP_KEEP_MONTHLY: ${BACKUP_KEEP_MONTHLY}
+      RESTIC_HOST: ${RESTIC_HOST}
+    secrets:
+      - source: restic_repository
+        target: restic_repository
+        uid: "1000"
+        gid: "1000"
+        mode: 0400
+      - source: restic_password
+        target: restic_password
+        uid: "1000"
+        gid: "1000"
+        mode: 0400
+      - source: aws_access_key_id
+        target: aws_access_key_id
+        uid: "1000"
+        gid: "1000"
+        mode: 0400
+      - source: aws_secret_access_key
+        target: aws_secret_access_key
+        uid: "1000"
+        gid: "1000"
+        mode: 0400
+      - source: docker_config
+        target: /root/.docker/config.json
+        mode: 0400
+    volumes:
+      - db-backups:/backups:ro
+      - restic-cache:/home/resticuser/.cache/restic
+    deploy:
+      mode: replicated
+      replicas: 0
+      labels:
+        - "swarm.cronjob.enable=true"
+        - "swarm.cronjob.schedule=30 1 * * *"
+        - "swarm.cronjob.skip-running=true"
+        - "swarm.cronjob.name=restic-offsite-backup"
+        - "swarm.cronjob.timezone=Europe/Paris"
+      restart_policy:
+        condition: none
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  restic-restore:
+    image: gregorylaigneau/restic:0.0.1
+    entrypoint: ["/bin/sh", "-c"]
+    command: ["sleep infinity"]
+    environment:
+      RESTIC_REPOSITORY_FILE: /run/secrets/restic_repository
+      RESTIC_PASSWORD_FILE: /run/secrets/restic_password
+      RESTIC_RESTORE_TARGET: ${RESTIC_RESTORE_TARGET}
+      BACKUP_DIR: ${BACKUP_DIR}
+      PGDATABASE: ${PG_NAME}
+      PGHOST: ${PG_HOST}
+      PGUSER: ${PG_USERNAME}
+      DOCKER_LOG_LEVEL: ${DOCKER_LOG_LEVEL}
+      RESTIC_HOST: ${RESTIC_HOST}
+    secrets:
+      - source: restic_repository
+        target: restic_repository
+        uid: "1000"
+        gid: "1000"
+        mode: 0400
+      - source: restic_password
+        target: restic_password
+        uid: "1000"
+        gid: "1000"
+        mode: 0400
+      - source: aws_access_key_id
+        target: aws_access_key_id
+        uid: "1000"
+        gid: "1000"
+        mode: 0400
+      - source: aws_secret_access_key
+        target: aws_secret_access_key
+        uid: "1000"
+        gid: "1000"
+        mode: 0400
+      - source: db_password
+        target: db_password
+        uid: "1000"
+        gid: "1000"
+        mode: 0400
+    volumes:
+      - restic-restore-data:/home/resticuser/restore
+      - restic-cache:/home/resticuser/.cache/restic
+    tmpfs:
+      - /tmp:size=128m
+    networks:
+      - app-network
+    deploy:
+      mode: replicated
+      replicas: 0
+      restart_policy:
+        condition: none
+    read_only: true
+    cap_drop:
+      - ALL
+
+volumes:
+  postgres-data:
+  redis-data:
+  db-backups:
+  restic-cache:
+  restic-restore-data:
+
+networks:
+  app-network:
+    driver: overlay
+    attachable: true
+
+configs:
+  sqitch_config:
+    file: ./sqitch.conf
+
+secrets:
+  db_password:
+    external: true
+  redis_password:
+    external: true
+  redis_acl:
+    external: true
+  access_token_secret:
+    external: true
+  refresh_token_secret:
+    external: true
+  smtp_password:
+    external: true
+  csrf_secret:
+    external: true
+  aws_access_key_id:
+    external: true
+  aws_secret_access_key:
+    external: true
+  restic_repository:
+    external: true
+  restic_password:
+    external: true
+  docker_config:
+    external: true
