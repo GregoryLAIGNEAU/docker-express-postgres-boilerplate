@@ -276,24 +276,24 @@ secrets:
   docker_config:
     external: true
   aws_access_key_id:
-    file: ./secrets/aws_access_key_id.txt
+    external: true
   aws_secret_access_key:
-    file: ./secrets/aws_secret_access_key.txt
+    external: true
   restic_repository:
-    file: ./secrets/restic_repository.txt
+    external: true
   restic_password:
-    file: ./secrets/restic_password.txt
+    external: true
   db_password:
-    file: ./secrets/db_password.txt
+    external: true
   redis_password:
-    file: ./secrets/redis_password.txt
+    external: true
   smtp_password:
-    file: ./secrets/smtp_password.txt
+    external: true
   redis_acl:
-    file: ./secrets/redis_acl.txt
+    external: true
   access_token_secret:
-    file: ./secrets/access_token_secret.txt
+    external: true
   refresh_token_secret:
-    file: ./secrets/refresh_token_secret.txt
+    external: true
   csrf_secret:
-    file: ./secrets/csrf_secret.txt
+    external: true
